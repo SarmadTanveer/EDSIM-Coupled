@@ -23,18 +23,12 @@ if st.button('Process file'):
     process_file(file)
 
 #Inputting Fields/ Sliders for each category 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3, col4 = st.columns(4)
+col1.subheader('Process Service Times (mins)')
 col2.subheader('Resource Allocation')
 col3.subheader('Patient Inter-Arrival Times (mins)')
-col1.subheader('Process Service Times (mins)')
-with col2:
-    docs = st.number_input('Number of Doctors', 1, 5, 2)
-    nurse = st.number_input('Number of Nurses', 1, 5, 2)
-    beds = st.number_input('Number of Beds', 1, 5, 2)
-    resbeds = st.number_input('Number of Resuscitation Beds', 1, 5, 2)
-with col3:
-    walkInP = st.number_input('Walk-In Patients', 1, 1000, 478)
-    AmbulanceP = st.number_input('Ambulance Patients', 1, 50, 9)
+col4.subheader('CTAS Distribution')
+
 with col1:
     CTASass = st.number_input('CTAS Assessment', 1, 50, 42)
     Priorityass = st.number_input('Priority Assessment', 1, 50, 23)
@@ -44,6 +38,18 @@ with col1:
     Bedass = st.number_input('Bed Assignment', 1, 50, 32)
     Resus = st.number_input('Resuscitations', 1, 50, 19)
     Registration = st.number_input('Registrations', 1, 50, 49)
+with col2:
+    docs = st.number_input('Number of Doctors', 1, 5, 2)
+    nurse = st.number_input('Number of Nurses', 1, 5, 2)
+    beds = st.number_input('Number of Beds', 1, 5, 2)
+    resbeds = st.number_input('Number of Resuscitation Beds', 1, 5, 2)
+with col3:
+    walkInP = st.number_input('Walk-In Patients', 1, 1000, 478)
+    AmbulanceP = st.number_input('Ambulance Patients', 1, 50, 9)
+with col4:
+    CTASwalkInP = st.number_input('CTAS Walk-In Patients', 1, 1000, 478)
+    CTASAmbulanceP = st.number_input('CTAS Ambulance Patients', 1, 50, 9)
+
 st.header('Simulation Parameters')
 simPar_duration = st.number_input('Duration (mins)', 1, 30, 10)
 simPar_iterations = st.number_input('Iterations', 5, 40, 18)
