@@ -1,6 +1,6 @@
 # from numpy.lib.arraysetops import ediff1d
 import sys
-sys.path.insert(0, r'C:\Users\gurvi\Documents\GitHub\EDSIM-Coupled\EDSIM-BackEnd')
+sys.path.insert(0, r'..\EDSIM-Coupled\EDSIM-BackEnd')
 
 import streamlit as st
 import matplotlib.pyplot as plt
