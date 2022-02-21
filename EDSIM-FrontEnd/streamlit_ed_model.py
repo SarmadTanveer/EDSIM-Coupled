@@ -1,6 +1,6 @@
 # from numpy.lib.arraysetops import ediff1d
 import sys
-sys.path.insert(0, '..\EDSIM-Coupled\EDSIM-BackEnd')
+sys.path.insert(0, r'..\EDSIM-Coupled\EDSIM-BackEnd')
 
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -24,10 +24,34 @@ if st.button('Process file'):
     process_file(file)
 
 #Inputting Fields/ Sliders for each category 
-col1, col2, col3 = st.columns(3)
+st.header('Process Service Times (mins)')
+col01, col02, col03, col04 = st.columns(4)
+with col01:
+    CTASass = st.number_input('CTAS Assessment (STD)', 1, 50, 42)
+    Priorityass = st.number_input('Priority Assessment (STD)', 1, 50, 23)
+    Initialass = st.number_input('Initial Assessment (STD)', 1, 50, 42)
+    Dischargeass = st.number_input('Discharge (STD)', 1, 50, 23)
+with col02:
+    CTASass = st.number_input('CTAS Assessment (Mean)', 1, 50, 42)
+    Priorityass = st.number_input('Priority Assessment (Mean)', 1, 50, 23)
+    Initialass = st.number_input('Initial Assessment (Mean)', 1, 50, 42)
+    Dischargeass = st.number_input('Discharge (Mean)', 1, 50, 23)
+with col03:
+    Treatment = st.number_input('Treatments (STD)', 1, 50, 20)
+    Bedass = st.number_input('Bed Assignment (STD)', 1, 50, 32)
+    Resus = st.number_input('Resuscitations (STD)', 1, 50, 19)
+    Registration = st.number_input('Registrations (STD)', 1, 50, 49)
+with col04:
+    Treatment = st.number_input('Treatments (Mean)', 1, 50, 20)
+    Bedass = st.number_input('Bed Assignment (Mean)', 1, 50, 32)
+    Resus = st.number_input('Resuscitations (Mean)', 1, 50, 19)
+    Registration = st.number_input('Registrations (Mean)', 1, 50, 49)
+
+col2, col3, col4 = st.columns(3)
 col2.subheader('Resource Allocation')
 col3.subheader('Patient Inter-Arrival Times (mins)')
-col1.subheader('Process Service Times (mins)')
+col4.subheader('CTAS Distribution')
+
 with col2:
     docs = st.number_input('Number of Doctors', 1, 5, 2)
     nurse = st.number_input('Number of Nurses', 1, 5, 2)
@@ -36,15 +60,10 @@ with col2:
 with col3:
     walkInP = st.number_input('Walk-In Patients', 1, 1000, 478)
     AmbulanceP = st.number_input('Ambulance Patients', 1, 50, 9)
-with col1:
-    CTASass = st.number_input('CTAS Assessment', 1, 50, 42)
-    Priorityass = st.number_input('Priority Assessment', 1, 50, 23)
-    Initialass = st.number_input('Initial Assessment', 1, 50, 42)
-    Dischargeass = st.number_input('Discharge Assessment', 1, 50, 23)
-    Treatment = st.number_input('Treatments', 1, 50, 20)
-    Bedass = st.number_input('Bed Assignment', 1, 50, 32)
-    Resus = st.number_input('Resuscitations', 1, 50, 19)
-    Registration = st.number_input('Registrations', 1, 50, 49)
+with col4:
+    CTASwalkInP = st.number_input('CTAS Walk-In Patients', 1, 1000, 478)
+    CTASAmbulanceP = st.number_input('CTAS Ambulance Patients', 1, 50, 9)
+
 st.header('Simulation Parameters')
 simPar_duration = st.number_input('Duration (mins)', 1, 30, 10)
 simPar_iterations = st.number_input('Iterations', 5, 40, 18)
