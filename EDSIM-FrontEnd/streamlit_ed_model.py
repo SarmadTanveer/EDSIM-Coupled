@@ -1,12 +1,13 @@
 # from numpy.lib.arraysetops import ediff1d
 import sys
-sys.path.insert(0, '../EDSIM-BackEnd/')
+sys.path.insert(0, '..\EDSIM-Coupled\EDSIM-BackEnd')
 
 import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
-from bokeh.palettes import Spectral4
-from bokeh.plotting import figure, output_file, show
+import pandas_bokeh
+from bokeh.plotting import figure, show
+from bokeh.models import ColumnDataSource
 import ED_Model2 as Model
 import Statistics as s
 
@@ -95,46 +96,53 @@ simParameters = {
     'length':simPar_duration
 }
 
-def los_chart(meanLOS):
-        meanLOSforCTAS1 = s.getDataByCTASLevel(meanLOS, 1)
-        meanLOSforCTAS2 = s.getDataByCTASLevel(meanLOS, 2)
-        meanLOSforCTAS3 = s.getDataByCTASLevel(meanLOS, 3)
-        meanLOSforCTAS4 = s.getDataByCTASLevel(meanLOS, 4)
-        meanLOSforCTAS5 = s.getDataByCTASLevel(meanLOS, 5)
+# Having issues with bokeh and GroupBy pandas data frames.
+def plots(df):
+        #Group dataframe by Run ID and CTAS Level
+        means = s.meanByGroup(df)
 
-        p = figure(width=800, height=250)
+        #Mean LOS of grouped dataframe
+        meanLOS = s.meanParByCTASperRun(means,'los')
+
+        #Creates ColumnDataSource for Bokeh input
+        source_grouped = ColumnDataSource(meanLOS)
+        source_df = ColumnDataSource(df)
+
+        p = figure()
         p.title.text = 'Click on legend entries to hide the corresponding lines'
 
-        p.line(y = meanLOSforCTAS1, line_width=2, color='firebrick', alpha=0.8, legend_label='Los for CTAS 1')
-
+        #p.line(x='Run ID_CTAS', y='los', legend_label='Mean LoS', source=source_grouped)
+        p.line(x='Run ID', y='los', source=source_df)
         p.legend.location = "top_left"
         p.legend.click_policy="hide"
 
-        fig, axs = plt.subplots(5,figsize=(10,17))
+        return p
+
+        #fig, axs = plt.subplots(5,figsize=(10,17))
         
         # Subplot for each CTAS level
-        axs[0].plot(meanLOSforCTAS1, 'C0')
-        axs[0].set_xlabel('Run ID')
-        axs[0].set_ylabel('Mean length of stay (min)')
-        axs[0].set_title('Mean Patient Length of Stay per Run ID (CTAS 1-5)')
+        # axs[0].plot(meanLOSforCTAS1, 'C0')
+        # axs[0].set_xlabel('Run ID')
+        # axs[0].set_ylabel('Mean length of stay (min)')
+        # axs[0].set_title('Mean Patient Length of Stay per Run ID (CTAS 1-5)')
 
-        axs[1].plot(meanLOSforCTAS2, 'C1')
-        axs[1].set_xlabel('Run ID')
-        axs[1].set_ylabel('Mean length of stay (min)')
+        # axs[1].plot(meanLOSforCTAS2, 'C1')
+        # axs[1].set_xlabel('Run ID')
+        # axs[1].set_ylabel('Mean length of stay (min)')
 
-        axs[2].plot(meanLOSforCTAS3, 'C2')
-        axs[2].set_xlabel('Run ID')
-        axs[2].set_ylabel('Mean length of stay (min)')
+        # axs[2].plot(meanLOSforCTAS3, 'C2')
+        # axs[2].set_xlabel('Run ID')
+        # axs[2].set_ylabel('Mean length of stay (min)')
 
-        axs[3].plot(meanLOSforCTAS4, 'C3')
-        axs[3].set_xlabel('Run ID')
-        axs[3].set_ylabel('Mean length of stay (min)')
+        # axs[3].plot(meanLOSforCTAS4, 'C3')
+        # axs[3].set_xlabel('Run ID')
+        # axs[3].set_ylabel('Mean length of stay (min)')
 
-        axs[4].plot(meanLOSforCTAS5, 'C4')
-        axs[4].set_xlabel('Run ID')
-        axs[4].set_ylabel('Mean length of stay (min)')
+        # axs[4].plot(meanLOSforCTAS5, 'C4')
+        # axs[4].set_xlabel('Run ID')
+        # axs[4].set_ylabel('Mean length of stay (min)')
 
-        return fig
+        
 
 
 
@@ -143,15 +151,10 @@ def los_chart(meanLOS):
 if st.button('Run Simulation'):
     # Gets results
     results_df = Model.runSim(simParameters)
-    #Group dataframe by Run ID and CTAS Level
-    means = s.meanByGroup(results_df)
-
-    #Mean LOS of grouped dataframe
-    meanLOS = s.meanParByCTASperRun(means,'los')
-    #create charts 
-    los_chart = los_chart(meanLOS)
-    # Shows the charts
-    st.pyplot(los_chart, use_container_width=True)
+    # Gets plots
+    plots = plots(results_df)
+    # Shows the graphs
+    st.bokeh_chart(plots, use_container_width=True)
     # Display the results (text)
     summary = s.calculateSummary(results_df)
     #for t in text:
