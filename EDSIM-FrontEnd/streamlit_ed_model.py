@@ -182,12 +182,14 @@ if st.button('Run Simulation'):
     # Raw data frame
     st.title('Raw simulation result data')
     AgGrid(results_df)
+    
     # Download button for results csv file
-    st.download_button(label="Download Results as CSV", data=results_df.to_csv().encode('utf-8'), file_name='Simulation_Results.csv', mime='text/csv',)
+    st.download_button(
+        label="Download Results as .CSV file", 
+        data=results_df.to_csv().encode('utf-8'), 
+        file_name='Simulation_Results.csv', 
+        mime='text/csv')
 
-# Download .txt file 
-
-#IMPLEMENT HEREEEEEEEEEEEEEEEe
 
 
 
