@@ -29,7 +29,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/sarmad/Documents/ryerson/8th semester/COE70B/EDSIM-Coupled/.venv"
+set -gx VIRTUAL_ENV "/home/sarmad/Documents/ryerson/8th semester/COE70B/EDSIM_Coupled/.venv"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH

@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/sarmad/Documents/ryerson/8th semester/COE70B/EDSIM-Coupled/.venv"
+VIRTUAL_ENV="/home/sarmad/Documents/ryerson/8th semester/COE70B/EDSIM_Coupled/.venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
