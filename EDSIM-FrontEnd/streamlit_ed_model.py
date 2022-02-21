@@ -12,6 +12,16 @@ from st_aggrid import AgGrid
 import ED_Model2 as Model
 import Statistics as s
 
+st.set_page_config(
+     page_title="Emergency Department Simulation",
+     page_icon="🧊",
+     layout="wide",
+     #initial_sidebar_state="expanded",
+     menu_items={
+         'About': "Ryerson Engineering Capstone Project created by: Gurvir, Mike, Renato, Sarmad"
+     }
+ )
+
 #Title at the top 
 st.title('Emergency Department Simulation')
 
