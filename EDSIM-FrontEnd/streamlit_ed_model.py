@@ -8,6 +8,7 @@ import pandas as pd
 import pandas_bokeh
 from bokeh.plotting import figure, show
 from bokeh.models import ColumnDataSource
+from st_aggrid import AgGrid
 import ED_Model2 as Model
 import Statistics as s
 
@@ -131,7 +132,7 @@ def plots(df):
         p.title.text = 'Click on legend entries to hide the corresponding lines'
 
         #p.line(x='Run ID_CTAS', y='los', legend_label='Mean LoS', source=source_grouped)
-        p.line(x='Run ID', y='los', source=source_df)
+        p.line(x='Run ID', y='los', legend_label='LoS', source=source_df)
         p.legend.location = "top_left"
         p.legend.click_policy="hide"
 
@@ -161,9 +162,6 @@ def plots(df):
         # axs[4].set_xlabel('Run ID')
         # axs[4].set_ylabel('Mean length of stay (min)')
 
-        
-
-
 
 #The graphs being displayed/modeled
 
@@ -173,11 +171,19 @@ if st.button('Run Simulation'):
     # Gets plots
     plots = plots(results_df)
     # Shows the graphs
+    st.title('Plots')
     st.bokeh_chart(plots, use_container_width=True)
     # Display the results (text)
+    st.title('Result Summary')
     summary = s.calculateSummary(results_df)
-    #for t in text:
-    st.write(0)
+    summary = pd.DataFrame.from_dict(summary, orient='index', columns=[''])
+    summary = summary.astype(str)
+    st.dataframe(summary)
+    # Raw data frame
+    st.title('Raw simulation result data')
+    AgGrid(results_df)
+    # Download button for results csv file
+    st.download_button(label="Download Results as CSV", data=results_df.to_csv().encode('utf-8'), file_name='Simulation_Results.csv', mime='text/csv',)
 
 # Download .txt file 
 
