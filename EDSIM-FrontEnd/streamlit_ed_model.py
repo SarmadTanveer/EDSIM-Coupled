@@ -5,7 +5,6 @@ sys.path.insert(0, '..\EDSIM-BackEnd')
 import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
-import pandas_bokeh
 from bokeh.plotting import figure, show
 from bokeh.models import ColumnDataSource
 from st_aggrid import AgGrid
