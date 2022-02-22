@@ -8,6 +8,7 @@ from st_aggrid import AgGrid
 import EDSIM_BackEnd.ED_Model2 as Model
 import EDSIM_BackEnd.Statistics as s
 
+#Page configurations
 st.set_page_config(
      page_title="Emergency Department Simulation",
      page_icon="🧊",
