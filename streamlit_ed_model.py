@@ -3,16 +3,21 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
 from bokeh.plotting import figure, show
+<<<<<<< HEAD
 from bokeh.models import ColumnDataSource, BoxAnnotation
 from bokeh.palettes import Set1_5
+=======
+from bokeh.models import ColumnDataSource
+>>>>>>> 2775af361b8e4ebcd014a9fa5f4f4d01405a5ca6
 from st_aggrid import AgGrid
 import EDSIM_BackEnd.ED_Model2 as Model
 import EDSIM_BackEnd.Statistics as s
 
 #Page configurations
+#favicon = st.image
 st.set_page_config(
      page_title="Emergency Department Simulation",
-     page_icon="🧊",
+     #page_icon=favicon,
      layout="wide",
      #initial_sidebar_state="expanded",
      menu_items={
@@ -131,6 +136,7 @@ def plots(df,losRange=(1000,1500)):
 
         #Mean LOS of grouped dataframe
         meanLOS = s.meanParByCTASperRun(means,'los')
+<<<<<<< HEAD
         
         CTAS1Data = s.getDataByCTASLevel(meanLOS,1)
         CTAS2Data = s.getDataByCTASLevel(meanLOS,2)
@@ -152,16 +158,18 @@ def plots(df,losRange=(1000,1500)):
             p.legend.location = "top_left"
             p.legend.click_policy="hide"
         
+=======
+>>>>>>> 2775af361b8e4ebcd014a9fa5f4f4d01405a5ca6
 
         #Creates ColumnDataSource for Bokeh input
-        #source_grouped = ColumnDataSource(CTAS1Data)
+        #source_grouped = ColumnDataSource(meanLOS)
         #source_df = ColumnDataSource(df)
 
         #p = figure()
         #p.title.text = 'Click on legend entries to hide the corresponding lines'
 
         #p.line(x='Run ID_CTAS', y='los', legend_label='Mean LoS', source=source_grouped)
-        #p.line(x='Run ID', y='los', legend_label='LoS', source=source_grouped)
+        #p.line(x='Run ID', y='los', legend_label='LoS', source=source_df)
         p.legend.location = "top_left"
         p.legend.click_policy="hide"
 
