@@ -3,7 +3,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
 from bokeh.plotting import figure, show
-from bokeh.models import ColumnDataSource
+from bokeh.models import ColumnDataSource, BoxAnnotation
 from bokeh.palettes import Set1_5
 from st_aggrid import AgGrid
 import EDSIM_BackEnd.ED_Model2 as Model
@@ -125,21 +125,20 @@ simParameters = {
 }
 
 # Having issues with bokeh and GroupBy pandas data frames.
-def plots(df):
+def plots(df,losRange=(1000,1500)):
         #Group dataframe by Run ID and CTAS Level
         means = s.meanByGroup(df)
 
         #Mean LOS of grouped dataframe
         meanLOS = s.meanParByCTASperRun(means,'los')
-        print("*********************************************************")
-        print(meanLOS)
+        
         CTAS1Data = s.getDataByCTASLevel(meanLOS,1)
         CTAS2Data = s.getDataByCTASLevel(meanLOS,2)
         CTAS3Data = s.getDataByCTASLevel(meanLOS,3)
         CTAS4Data = s.getDataByCTASLevel(meanLOS,4)
         CTAS5Data = s.getDataByCTASLevel(meanLOS,5)
 
-        print(CTAS1Data['los'])
+        mid_box = BoxAnnotation(bottom=losRange[0], top=losRange[1], fill_alpha=0.2, fill_color='#0072B2')
         
         losCTASData = [CTAS1Data,CTAS2Data,CTAS3Data,CTAS4Data,CTAS5Data]
         graphNames = ['CTAS 1', 'CTAS 2', 'CTAS 3', 'CTAS 4', 'CTAS 5']
@@ -165,6 +164,8 @@ def plots(df):
         #p.line(x='Run ID', y='los', legend_label='LoS', source=source_grouped)
         p.legend.location = "top_left"
         p.legend.click_policy="hide"
+
+        p.add_layout(mid_box)
 
         return p
 
@@ -199,10 +200,12 @@ if st.button('Run the Simulation'):
     # Gets results
     results_df = Model.runSim(simParameters)
     # Gets plots
-    plots = plots(results_df)
+
+    
     # Shows the graphs
     st.title('Interactive Plots')
-    st.bokeh_chart(plots, use_container_width=True)
+    plot = plots(results_df)
+    st.bokeh_chart(plot, use_container_width=True)
     # Display the results (text)
     st.title('Summary of Results')
     summary = s.calculateSummary(results_df)
