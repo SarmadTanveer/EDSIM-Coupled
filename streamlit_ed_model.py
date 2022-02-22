@@ -3,12 +3,10 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
 from bokeh.plotting import figure, show
-<<<<<<< HEAD
 from bokeh.models import ColumnDataSource, BoxAnnotation
 from bokeh.palettes import Set1_5
-=======
 from bokeh.models import ColumnDataSource
->>>>>>> 2775af361b8e4ebcd014a9fa5f4f4d01405a5ca6
+
 from st_aggrid import AgGrid
 import EDSIM_BackEnd.ED_Model2 as Model
 import EDSIM_BackEnd.Statistics as s
@@ -136,7 +134,6 @@ def plots(df,losRange=(1000,1500)):
 
         #Mean LOS of grouped dataframe
         meanLOS = s.meanParByCTASperRun(means,'los')
-<<<<<<< HEAD
         
         CTAS1Data = s.getDataByCTASLevel(meanLOS,1)
         CTAS2Data = s.getDataByCTASLevel(meanLOS,2)
@@ -157,9 +154,6 @@ def plots(df,losRange=(1000,1500)):
 
             p.legend.location = "top_left"
             p.legend.click_policy="hide"
-        
-=======
->>>>>>> 2775af361b8e4ebcd014a9fa5f4f4d01405a5ca6
 
         #Creates ColumnDataSource for Bokeh input
         #source_grouped = ColumnDataSource(meanLOS)
