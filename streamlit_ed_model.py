@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from bokeh.plotting import figure, show
 from bokeh.models import ColumnDataSource
+from bokeh.palettes import Set1_5
 from st_aggrid import AgGrid
 import EDSIM_BackEnd.ED_Model2 as Model
 import EDSIM_BackEnd.Statistics as s
@@ -130,16 +131,38 @@ def plots(df):
 
         #Mean LOS of grouped dataframe
         meanLOS = s.meanParByCTASperRun(means,'los')
+        print("*********************************************************")
+        print(meanLOS)
+        CTAS1Data = s.getDataByCTASLevel(meanLOS,1)
+        CTAS2Data = s.getDataByCTASLevel(meanLOS,2)
+        CTAS3Data = s.getDataByCTASLevel(meanLOS,3)
+        CTAS4Data = s.getDataByCTASLevel(meanLOS,4)
+        CTAS5Data = s.getDataByCTASLevel(meanLOS,5)
 
-        #Creates ColumnDataSource for Bokeh input
-        source_grouped = ColumnDataSource(meanLOS)
-        source_df = ColumnDataSource(df)
+        print(CTAS1Data['los'])
+        
+        losCTASData = [CTAS1Data,CTAS2Data,CTAS3Data,CTAS4Data,CTAS5Data]
+        graphNames = ['CTAS 1', 'CTAS 2', 'CTAS 3', 'CTAS 4', 'CTAS 5']
 
-        p = figure()
+        p = figure(x_axis_label = 'RUN ID', y_axis_label = 'MINUTES')
         p.title.text = 'Click on legend entries to hide the corresponding lines'
 
+        for data,name,color in zip(losCTASData,graphNames,Set1_5):
+            p.line(data['los'].keys(),data['los'], line_width=2, color=color, alpha=0.8, legend_label=name)
+
+            p.legend.location = "top_left"
+            p.legend.click_policy="hide"
+        
+
+        #Creates ColumnDataSource for Bokeh input
+        #source_grouped = ColumnDataSource(CTAS1Data)
+        #source_df = ColumnDataSource(df)
+
+        #p = figure()
+        #p.title.text = 'Click on legend entries to hide the corresponding lines'
+
         #p.line(x='Run ID_CTAS', y='los', legend_label='Mean LoS', source=source_grouped)
-        p.line(x='Run ID', y='los', legend_label='LoS', source=source_df)
+        #p.line(x='Run ID', y='los', legend_label='LoS', source=source_grouped)
         p.legend.location = "top_left"
         p.legend.click_policy="hide"
 
