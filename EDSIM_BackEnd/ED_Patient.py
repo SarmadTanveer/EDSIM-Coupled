@@ -8,6 +8,9 @@ class Patient:
     p_id = 0  # Patient ID
     run_id = 1  # Run ID
 
+    # generate true random values
+    trueRandom = random.SystemRandom()
+
     # Exact times
     # Simulation time in minutes
     arrival_time = 0  # Patient arrival time at ED
@@ -83,7 +86,7 @@ class Patient:
     def setCTAS(self, ctas_dist):
         
         # generate a random number between 0 and 1
-        sample = random.uniform(0,1)
+        sample = self.trueRandom.uniform(0,1)
         ctas_level = 5
         
         # assign ctas_level on likelyhood of random number being between certain limits
