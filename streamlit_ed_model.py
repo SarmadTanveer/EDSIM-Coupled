@@ -17,12 +17,15 @@ st.set_page_config(
      page_title="Emergency Department Simulation",
      #page_icon=favicon,
      layout="wide",
-     #initial_sidebar_state="expanded",
+     initial_sidebar_state='auto',
      menu_items={
          'About': "Ryerson Engineering Capstone Project created by: Gurvir, Mike, Renato, Sarmad"
      }
  )
-
+add_selectbox = st.sidebar.selectbox(
+    "TEST SIDEBARD",
+    ("Graphs", "Tables", "Help!")
+)
 #Title at the top 
 st.title('Emergency Department Simulation')
 
@@ -37,7 +40,7 @@ if st.button('Process file'):
 
 #Inputting Fields/ Sliders for each category 
 st.header('Process Service Times (mins)')
-col01, col02, col03, col04 = st.columns(4)
+col01, colnull, col02, colnull, col03, colnull, col04 = st.columns([2,0.5,2,0.5,2,0.5,2])
 with col01:
     CTASass = st.number_input('CTAS Assessment (STD)', 1, 50, 42)
     Priorityass = st.number_input('Priority Assessment (STD)', 1, 50, 23)
@@ -59,27 +62,31 @@ with col04:
     Resus = st.number_input('Resuscitations (Mean)', 1, 50, 19)
     Registration = st.number_input('Registrations (Mean)', 1, 50, 49)
 
-col2, col3, col4 = st.columns(3)
+col2, colnull, col3, colnull, col4 = st.columns([2,1,2.5,1,2])
 col2.subheader('Resource Allocation')
-col3.subheader('Patient Inter-Arrival Times (mins)')
+col3.subheader('Inter-Arrival Times (mins)')
 col4.subheader('CTAS Distribution')
 
 with col2:
-    docs = st.number_input('Number of Doctors', 1, 5, 2)
-    nurse = st.number_input('Number of Nurses', 1, 5, 2)
-    beds = st.number_input('Number of Beds', 1, 5, 2)
-    resbeds = st.number_input('Number of Resuscitation Beds', 1, 5, 2)
+    docs = st.number_input('Number of Doctors', 1, 5, 2, help="Min=381, Max=5000")
+    nurse = st.number_input('Number of Nurses', 1, 5, 2, help="Min=381, Max=5000")
+    beds = st.number_input('Number of Beds', 1, 5, 2, help="Min=381, Max=5000")
+    resbeds = st.number_input('Number of Resuscitation Beds', 1, 5, 2, help="Min=381, Max=5000")
 with col3:
-    walkInP = st.number_input('Walk-In Patients', 1, 1000, 478)
-    AmbulanceP = st.number_input('Ambulance Patients', 1, 50, 9)
+    walkInP = st.number_input('Walk-In Patients', 1, 1000, 478, help="Min=381, Max=5000")
+    AmbulanceP = st.number_input('Ambulance Patients', 1, 50, 9, help="Min=381, Max=5000")
 with col4:
-    CTASwalkInP = st.number_input('CTAS Walk-In Patients', 1, 1000, 478)
-    CTASAmbulanceP = st.number_input('CTAS Ambulance Patients', 1, 50, 9)
+    CTASwalkInP = st.number_input('CTAS Walk-In Patients', 1, 1000, 478, help="Min=381, Max=5000")
+    CTASAmbulanceP = st.number_input('CTAS Ambulance Patients', 1, 50, 9, help="Min=381, Max=5000")
 
 st.header('Simulation Parameters')
-simPar_duration = st.number_input('Duration (mins)', 1, 30, 10)
-simPar_iterations = st.number_input('Iterations', 5, 40, 18)
-simPar_warmUp = st.number_input('Warm Up Period', 1, 30, 10)
+col5, colnull, col6, colnull, col7 = st.columns([2,1,2,1,2])
+with col5: 
+    simPar_duration = st.number_input('Duration (mins)', 1, 30, 10, help="Min=381, Max=5000")
+with col6: 
+    simPar_iterations = st.number_input('Iterations', 5, 40, 18, help="Min=381, Max=5000")
+with col7: 
+    simPar_warmUp = st.number_input('Warm Up Period', 1, 30, 10, help="Min=381, Max=5000")
 
 simParameters = {
     'resCapacity': {
