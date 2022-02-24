@@ -264,7 +264,7 @@ class EDModel:
             rBed_queue_time = patient.resuscitation_time_bed - patient.resuscitation_time_arrival
 
             with self.nurse.request(priority=0) as req1:
-                # wait until a nurse and bed is avaiable then lock both
+                # wait until a nurse and doctor is avaiable
                 yield req1
 
                 with self.doctor.request(priority=0) as req2:
@@ -273,17 +273,15 @@ class EDModel:
                     patient.resuscitation_time_nurse_doctor = self.env.now
 
                     # sampled_xxxx_duration is getting a random value from the mean and then
-                    # is going to wait that time until it concluded and with that releases the nurse but not bed
+                    # is going to wait that time until it concluded and with that releases the nurse, doctor and bed
                     sampled_service_time = self.trueRandom.expovariate(1.0 / self.parameters.resuscitation)
                     yield self.env.timeout(sampled_service_time)
 
         patient.resuscitation_time_end = self.env.now
 
-        ######### error in resuscitation
-        ######### Why is a CTAS 1 patient going back to bed assigment? It does not follows the models and mess with the output
-        ######### bed_assignmen queue time for ctas level 1 should be zero
-        ######### should go to initial_assessment
-        self.env.process(self.bed_assignment(patient))
+        # resuscitation will encompass bed assignment, initial assessment and treatment for CTAS level 1
+        # after is complete go to discharge decision
+        self.env.process(self.discharge_decision(patient))
 
     # Initial Assessment:
     def initial_assessment(self, patient):
