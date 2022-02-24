@@ -331,7 +331,8 @@ class EDModel:
 
         yield self.env.timeout(sampled_service_time)
 
-        self.regular_beds.release(patient.bed)
+        if patient.CTAS_Level != 1:
+            self.regular_beds.release(patient.bed)
 
         patient.discharge_decision_time_leaving = self.env.now
         patient.calculate_Times()  # calculcate the patient queue times
