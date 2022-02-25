@@ -12,20 +12,20 @@ import EDSIM_BackEnd.ED_Model2 as Model
 import EDSIM_BackEnd.Statistics as s
 
 #Page configurations
-#favicon = st.image
 st.set_page_config(
      page_title="Emergency Department Simulation",
-     #page_icon=favicon,
      layout="wide",
      initial_sidebar_state='auto',
      menu_items={
          'About': "Ryerson Engineering Capstone Project created by: Gurvir, Mike, Renato, Sarmad"
      }
  )
+#Side Bar Section
 add_selectbox = st.sidebar.selectbox(
     "TEST SIDEBARD",
     ("Graphs", "Tables", "Help!")
 )
+
 #Title at the top 
 st.title('Emergency Department Simulation')
 
