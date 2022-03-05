@@ -26,7 +26,7 @@ add_selectbox = st.sidebar.selectbox(
     ("Graphs", "Tables", "Help!")
 )
 
-#Title at the top 
+#Title at the top of page
 st.title('Emergency Department Simulation')
 
 # File Upload/Processing
