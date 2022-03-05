@@ -233,7 +233,7 @@ class EDModel:
         patient.bed = bed_request  # bed is available and has been locked
 
         # resource queueing time: regular bed
-        patient.bed_assignment_time_bed = self.env.now
+        patient.bed_assignment_acquired = self.env.now
 
         # request a nurse
         with self.nurse.request(priority=patient.CTAS_Level) as req:
@@ -241,7 +241,7 @@ class EDModel:
             yield req
 
             # nurse is available
-            patient.bed_assignment_time_nurse = self.env.now
+            patient.bed_assignment_time = self.env.now
 
             # sampled_xxxx_duration is getting a random value from the mean and then
             # is going to wait that time until it concluded and with that releases the nurse but not bed
@@ -260,8 +260,7 @@ class EDModel:
             yield req
 
             # resuscitation bed acquired
-            patient.resuscitation_time_bed = self.env.now
-            rBed_queue_time = patient.resuscitation_time_bed - patient.resuscitation_time_arrival
+            patient.resuscitation_bed_acquired = self.env.now
 
             with self.nurse.request(priority=0) as req1:
                 # wait until a nurse and doctor is avaiable
@@ -270,7 +269,7 @@ class EDModel:
                 with self.doctor.request(priority=0) as req2:
                     yield req2
 
-                    patient.resuscitation_time_nurse_doctor = self.env.now
+                    patient.resuscitation_time = self.env.now
 
                     # sampled_xxxx_duration is getting a random value from the mean and then
                     # is going to wait that time until it concluded and with that releases the nurse, doctor and bed
@@ -291,7 +290,7 @@ class EDModel:
             # wait for doctor
             yield req
 
-            patient.initial_assessment_time_doctor = self.env.now
+            patient.initial_assessment_time = self.env.now
 
             sampled_service_time = self.trueRandom.expovariate(1.0 / self.parameters.initialAssessment)
             yield self.env.timeout(sampled_service_time)
@@ -312,7 +311,7 @@ class EDModel:
             # wait until a doctor is available
             yield req
 
-            patient.treatment_time_nurse_doctor = self.env.now
+            patient.treatment_time = self.env.now
 
             # sampled_xxxx_duration is getting a random value from the mean and then
             # is going to wait that time until it concluded and with that releases the nurse and doctor
@@ -336,7 +335,6 @@ class EDModel:
 
         patient.discharge_decision_time_leaving = self.env.now
         patient.calculate_Times()  # calculcate the patient queue times
-        patient.discharge_time_stamp = self.env.now
 
         self.patientList.append(patient.convertToDict())
 
