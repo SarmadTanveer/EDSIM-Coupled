@@ -22,8 +22,8 @@ st.set_page_config(
  )
 #Side Bar Section
 add_selectbox = st.sidebar.selectbox(
-    "TEST SIDEBARD",
-    ("Graphs", "Tables", "Help!")
+    "App Navigation",
+    ("Home", "Data Input", "Graph Display", "Table Display", "Help!")
 )
 
 #Title at the top of page
