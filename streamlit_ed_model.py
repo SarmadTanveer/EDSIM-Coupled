@@ -1,15 +1,14 @@
-# from numpy.lib.arraysetops import ediff1d
 import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
 from bokeh.plotting import figure, show
 from bokeh.models import ColumnDataSource, BoxAnnotation
-from bokeh.palettes import Set1_5
+from bokeh.palettes import Set1_5, Set1_3, Set1_4
 from bokeh.models import ColumnDataSource
 
 from st_aggrid import AgGrid
 import EDSIM_BackEnd.ED_Model3 as Model
-import EDSIM_BackEnd.Statistics as s
+import EDSIM_BackEnd.Statistics as stats
 
 # Page configurations
 # favicon = st.image
@@ -81,7 +80,7 @@ with col4:
     CTASAmbulanceP = st.number_input('CTAS Ambulance Patients', 1, 50, 9)
 
 st.header('Simulation Parameters')
-simPar_duration = st.number_input('Duration (mins)', 1, 30, 10)
+simPar_duration = st.number_input('Duration (mins)', 1, 5000, 10)
 simPar_iterations = st.number_input('Iterations', 5, 40, 18)
 simPar_warmUp = st.number_input('Warm Up Period', 1, 30, 10)
 
@@ -132,50 +131,70 @@ simParameters = {
 }
 
 
-# Having issues with bokeh and GroupBy pandas data frames.
-def plots(df, losRange=(1000, 1500)):
-    # Group dataframe by Run ID and CTAS Level
-    means = s.meanByGroup(df)
+# 
+def plotLOS(df):
+    
+    # Get los means by ctas
+    losData = stats.getLOS(df)
 
-    # Mean LOS of grouped dataframe
-    meanLOS = s.meanParByCTASperRun(means, 'los')
+    
+    # chart labels for x axis
+    ctasLevels = ['CTAS 1','CTAS 2','CTAS 3','CTAS 4','CTAS 5']   
 
-    CTAS1Data = s.getDataByCTASLevel(meanLOS, 1)
-    CTAS2Data = s.getDataByCTASLevel(meanLOS, 2)
-    CTAS3Data = s.getDataByCTASLevel(meanLOS, 3)
-    CTAS4Data = s.getDataByCTASLevel(meanLOS, 4)
-    CTAS5Data = s.getDataByCTASLevel(meanLOS, 5)
+    TOOLTIPS = [("Level", "$x"), ("LOS", "$y")] 
 
-    mid_box = BoxAnnotation(bottom=losRange[0], top=losRange[1], fill_alpha=0.2, fill_color='#0072B2')
+    p = figure(x_range = ctasLevels)
+    p.vbar(x=ctasLevels,  top=losData, width=0.5,color=Set1_5,legend_group="x")
+    p.legend.orientation = "horizontal"
+    p.legend.location = "top_center" 
 
-    losCTASData = [CTAS1Data, CTAS2Data, CTAS3Data, CTAS4Data, CTAS5Data]
-    graphNames = ['CTAS 1', 'CTAS 2', 'CTAS 3', 'CTAS 4', 'CTAS 5']
-
-    p = figure(x_axis_label='RUN ID', y_axis_label='MINUTES')
-    p.title.text = 'Click on legend entries to hide the corresponding lines'
-
-    for data, name, color in zip(losCTASData, graphNames, Set1_5):
-        p.line(data['los'].keys(), data['los'], line_width=2, color=color, alpha=0.8, legend_label=name)
-
-        p.legend.location = "top_left"
-        p.legend.click_policy = "hide"
-
-    # Creates ColumnDataSource for Bokeh input
-    # source_grouped = ColumnDataSource(meanLOS)
-    # source_df = ColumnDataSource(df)
-
-    # p = figure()
-    # p.title.text = 'Click on legend entries to hide the corresponding lines'
-
-    # p.line(x='Run ID_CTAS', y='los', legend_label='Mean LoS', source=source_grouped)
-    # p.line(x='Run ID', y='los', legend_label='LoS', source=source_df)
-    p.legend.location = "top_left"
-    p.legend.click_policy = "hide"
-
-    p.add_layout(mid_box)
 
     return p
 
+def plotCTAS(df):
+    ctasData = stats.getTimetoCTAS(df)
+    
+    # chart labels for x axis
+    ctasLevels = ['CTAS 3','CTAS 4','CTAS 5']   
+
+    TOOLTIPS = [("Level", "$x"), ("LOS", "$y")] 
+
+    p = figure(x_range = ctasLevels)
+    p.vbar(x=ctasLevels,  top=ctasData, width=0.5,color=Set1_3,legend_group="x")
+    p.legend.orientation = "horizontal"
+    p.legend.location = "top_center" 
+
+    return p
+
+def plotBedAssignment(df):
+    bedAssData = stats.getTimeToBedAssignment(df)
+    
+    # chart labels for x axis
+    ctasLevels = ['CTAS 2','CTAS 3','CTAS 4','CTAS 5']   
+
+    TOOLTIPS = [("Level", "$x"), ("LOS", "$y")] 
+
+    p = figure(x_range = ctasLevels)
+    p.vbar(x=ctasLevels,  top=bedAssData, width=0.5,color=Set1_4,legend_group="x")
+    p.legend.orientation = "horizontal"
+    p.legend.location = "top_center" 
+
+    return p
+
+def plotTreatment(df):
+    treatmentData = stats.getTimeToTreatment(df)
+    
+    # chart labels for x axis
+    ctasLevels = ['CTAS 2','CTAS 3','CTAS 4','CTAS 5']   
+
+    TOOLTIPS = [("Level", "$x"), ("LOS", "$y")] 
+
+    p = figure(x_range = ctasLevels)
+    p.vbar(x=ctasLevels,  top=treatmentData, width=0.5,color=Set1_4,legend_group="x")
+    p.legend.orientation = "horizontal"
+    p.legend.location = "top_center" 
+
+    return p
     # fig, axs = plt.subplots(5,figsize=(10,17))
 
     # Subplot for each CTAS level
@@ -209,15 +228,36 @@ if st.button('Run the Simulation'):
     # Gets plots
 
     # Shows the graphs
-    st.title('Interactive Plots')
-    plot = plots(results_df)
-    st.bokeh_chart(plot, use_container_width=True)
+    st.title('Results')
+
+    #Show LOS graph
+    los = plotLOS(results_df)
+    st.header('Average total Length of Stay in the emergency department  for each CTAS level')
+    st.bokeh_chart(los, use_container_width=True)
+    
+    #Time from Entry to CTASAssessment 
+    ctas = plotCTAS(results_df)
+    st.header('Average time from entry to CTAS Assessment for each CTAS 3,4,5')
+    st.bokeh_chart(ctas, use_container_width=True)
+
+    #Time from triage to Bed Assignemnt 
+    bedAss = plotBedAssignment(results_df)
+    st.header('Average time from CTAS Assessment to Bed Assignment for each CTAS 2,3,4,5')
+    st.bokeh_chart(bedAss, use_container_width=True)
+
+    #Time from triage to Treatment 
+    bedAss = plotTreatment(results_df)
+    st.header('Average time from CTAS Assessment to Treatment for each CTAS 2,3,4,5')
+    st.bokeh_chart(bedAss, use_container_width=True)
+    
     # Display the results (text)
+    
+    
     st.title('Summary of Results')
-    summary = s.calculateSummary(results_df)
-    summary = pd.DataFrame.from_dict(summary, orient='index', columns=[''])
-    summary = summary.astype(str)
-    st.dataframe(summary)
+    #summary = s.calculateSummary(results_df)
+    #summary = pd.DataFrame.from_dict(summary, orient='index', columns=[''])
+    #summary = summary.astype(str)
+    #st.dataframe(summary)
     # Raw data frame
     st.title('Raw Simulation Resulting Data')
     AgGrid(results_df)

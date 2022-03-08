@@ -364,8 +364,8 @@ def runSim(simParameters):
     timeSeries = []
 
     for run in range(parameters.iterations):
-        print('--------------------------------------------------------------------------------')
-        print("Run ", run + 1, " of ", parameters.iterations, sep="")
+        #print('--------------------------------------------------------------------------------')
+        #print("Run ", run + 1, " of ", parameters.iterations, sep="")
         ed_model = EDModel(parameters)
         patientList, timeList = ed_model.run()
         runList.extend(patientList)
@@ -374,14 +374,14 @@ def runSim(simParameters):
         # print(runList)
         Patient.p_id = 0
         Patient.run_id += 1
-        print('--------------------------------------------------------------------------------')
+        #print('--------------------------------------------------------------------------------')
         # ed model.run(until=parameters.length)
 
     Patient.run_id = 1
-    print(timeSeries)
+    #print(timeSeries)
     df = Writer.ConvertToDataFrame(runList=runList)
     df2 = Writer.ConvertToDataFrame(timeSeries)
-    print(df)
+    #print(df)
     Writer.writeToCsv(df, "PatientData.csv")
     Writer.writeToCsv(df2, "SnapShotData.csv")
     return df

@@ -116,7 +116,7 @@ class Patient:
         self.bed_assignment_time_wt = self.bed_assignment_time - self.bed_assignment_time_arrival
 
         self.resuscitation_wt_bed = self.resuscitation_bed_acquired - self.resuscitation_time_arrival
-        self.resuscitation_time_wt = self.registration_time - self.resuscitation_time_arrival
+        self.resuscitation_time_wt = self.resuscitation_time - self.resuscitation_time_arrival
         
         self.initial_assessment_wt = self.initial_assessment_time - self.initial_assessment_time_arrival
 
@@ -128,22 +128,22 @@ class Patient:
                 'CTAS': self.CTAS_Level, 
                 'Type': "ambulance" if isinstance(self, ambulancePatient) else "walkin", 
                 'Arrival Time Stamp': self.arrival_time,
-                'Discharge Time Stamp': self.discharge_time_stamp,
+                'Discharge Time Stamp': self.discharge_decision_time_leaving,
                 'LOS': self.los, 
-
-                'Process Queue Times':{
                 'Priority Assessment Queue Time': self.priority_assessment_wt, 
                 'CTAS Assessment Queue Time': self.ctas_assessment_wt, 
                 'Registration Queue Time': self.registration_wt, 
                 'Bed Assignment Queue Time': self.bed_assignment_time_wt, 
                 'Resuscitation Queue Time': self.resuscitation_time_wt,  
                 'Initial Assessment Queue Time': self.initial_assessment_wt, 
-                'Treatment Queue Time': self.treatment_wt},
-
-                'Resource Queue Times':{
-                    'Bed': self.bed_assignment_wt_bed,
-                    'Resuscitation Bed': self.resuscitation_wt_bed,
-                }
+                'Treatment Queue Time': self.treatment_wt,
+                'Bed': self.bed_assignment_wt_bed,
+                'Resuscitation Bed': self.resuscitation_wt_bed,
+                'Time to CTAS Assessment': self.ctas_assessment_time - self.arrival_time,
+                'Time to Bed Assignment': self.bed_assignment_time-self.ctas_assessment_time_end,
+                'Time to Initial Assessment': self.initial_assessment_time-self.arrival_time,
+                'Time to Treatment': self.treatment_time-self.ctas_assessment_time_end
+                
         }
 
         return data
