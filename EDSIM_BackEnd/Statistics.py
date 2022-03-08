@@ -5,8 +5,6 @@ import matplotlib.pyplot as plt
 
 def read_csv(): 
     df = pd.read_csv('PatientData.csv')
-    print(df)
-    print(df.dtypes)
     return df
 
 def calculateSummary(dataframe): 
@@ -105,6 +103,42 @@ def calculateSummary(dataframe):
                 }
     return summary
 
+#get LOS data for all ctas levels
+def getLOS(data): 
+    df = data[['Run ID', 'CTAS', 'LOS']].copy()
+    df = df.groupby(['Run ID', 'CTAS']).mean()
+    df = df.unstack(0)
+    df = df.mean(axis=1)
+    return df
+
+#get time patient takes to get to CTAS Assessment
+def getTimetoCTAS(data): 
+    df = data[['Run ID', 'CTAS', 'Time to CTAS Assessment']].copy()
+    df = df.groupby(['Run ID','CTAS']).mean()
+    df = df.unstack(0)
+   
+    df = df.mean(axis=1)
+    df = df.drop(index=[1,2],axis=0)
+    return df
+
+def getTimeToBedAssignment(data):
+    df = data[['Run ID', 'CTAS', 'Time to Bed Assignment']].copy()
+    df = df.groupby(['Run ID','CTAS']).mean()
+    df = df.unstack(0)
+   
+    df = df.mean(axis=1)
+    df = df.drop(index=[1],axis=0)
+    return df
+
+def getTimeToTreatment(data):
+    df = data[['Run ID', 'CTAS', 'Time to Treatment']].copy()
+    df = df.groupby(['Run ID','CTAS']).mean()
+    df = df.unstack(0)
+   
+    df = df.mean(axis=1)
+    df = df.drop(index=[1],axis=0)
+    return df
+
 #Calculate process that takes the longest 
 def calcBottleNeck(Data): 
     df = meanByGroup(Data, ['Run ID']).drop(columns=['Patient ID', 'Arrival', 'los', 'CTAS'])
@@ -143,7 +177,7 @@ def meanParAllData(dataframe,col):
 
 
 #example usage. get avg priority assessment queue time for ctas level 1 per run
-# data = read_csv()
+#data = read_csv()
 
 # print(calculateSummary(data))
 
@@ -154,6 +188,6 @@ def meanParAllData(dataframe,col):
 # meanPriorAssessforCTAS1 = getDataByCTASLevel(meanPriorAssess, 1)
 # print(meanPriorAssessforCTAS1.dtypes)
 # print(type(meanPriorAssessforCTAS1)) 
-
+#print(getLOS(data))
 # plt.plot(meanPriorAssessforCTAS1)
 # plt.show()
