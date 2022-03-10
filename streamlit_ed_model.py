@@ -29,96 +29,65 @@ from EDSIM_BackEnd import Home, ExtraVariables
     #("Home", "Data Input", "Graph Display", "Table Display", "Help!")
 #)
 
-app = MultiApp()
-app.add_app("Home",Home.app)
-app.add_app("Extra Inputs",ExtraVariables.app)
-app.run()
-
-#Title at the top of page
-st.title('Emergency Department Simulation')
-
 # File Upload/Processing
 file = st.file_uploader('Upload .csv file with data')
 def process_file(file):
     st.write(file)
     df = pd.read_csv(file)
     st.write(df)
-if st.button('Process file'):
-    process_file(file)
+    if st.button('Process file'):
+        process_file(file)
 
-#Inputting Fields/ Sliders for each category 
+app = MultiApp()
+app.add_app("Home", Home.app)
+app.add_app("Extra Inputs", ExtraVariables.app)
+app.run()
 
-col2, colnull, col3, colnull, col4 = st.columns([2,1,2.5,1,2])
-col2.subheader('Resource Allocation')
-col3.subheader('Inter-Arrival Times (mins)')
-col4.subheader('CTAS Distribution')
+# simParameters = {
+#     'resCapacity': {
+#         'doctor':docs, 
+#         'nurse':nurse,
+#         'beds':beds,
+#         'rBeds':resbeds, 
 
-with col2:
-    docs = st.number_input('Number of Doctors', 1, 5, 2, help="Min=381, Max=5000")
-    nurse = st.number_input('Number of Nurses', 1, 5, 2, help="Min=381, Max=5000")
-    beds = st.number_input('Number of Beds', 1, 5, 2, help="Min=381, Max=5000")
-    resbeds = st.number_input('Number of Resuscitation Beds', 1, 5, 2, help="Min=381, Max=5000")
-with col3:
-    walkInP = st.number_input('Walk-In Patients', 1, 1000, 478, help="Min=381, Max=5000")
-    AmbulanceP = st.number_input('Ambulance Patients', 1, 50, 9, help="Min=381, Max=5000")
-with col4:
-    CTASwalkInP = st.number_input('CTAS Walk-In Patients', 1, 1000, 478, help="Min=381, Max=5000")
-    CTASAmbulanceP = st.number_input('CTAS Ambulance Patients', 1, 50, 9, help="Min=381, Max=5000")
+#     }, 
+#     'pInterArrival':{
+#         'ambulance':walkInP, 
+#         'walkIn': AmbulanceP
 
-st.header('Simulation Parameters')
-col5, colnull, col6, colnull, col7 = st.columns([2,1,2,1,2])
-with col5: 
-    simPar_duration = st.number_input('Duration (mins)', 1, 30, 10, help="Min=381, Max=5000")
-with col6: 
-    simPar_iterations = st.number_input('Iterations', 5, 40, 18, help="Min=381, Max=5000")
-with col7: 
-    simPar_warmUp = st.number_input('Warm Up Period', 1, 30, 10, help="Min=381, Max=5000")
-
-simParameters = {
-    'resCapacity': {
-        'doctor':docs, 
-        'nurse':nurse,
-        'beds':beds,
-        'rBeds':resbeds, 
-
-    }, 
-    'pInterArrival':{
-        'ambulance':walkInP, 
-        'walkIn': AmbulanceP
-
-    }, 
-    'serTimes':{
-        'priorAssessment': Priorityass, 
-        'ctasAssessment':CTASass, 
-        'registration':Registration, 
-        'bedAssignment':Bedass,
-        'initialAssessment':Initialass,
-        'treatment':Treatment, 
-        'discharge':Dischargeass,
-        'resuscitation':Resus 
-    }, 
-    'ctasDist':{
-        'ambulance': {
-             1:0.5, 
-             2:0.2, 
-             3:0.3, 
-             4:0.1, 
-             5:0
+#     }, 
+#     'serTimes':{
+#         'priorAssessment': Priorityass, 
+#         'ctasAssessment':CTASass, 
+#         'registration':Registration, 
+#         'bedAssignment':Bedass,
+#         'initialAssessment':Initialass,
+#         'treatment':Treatment, 
+#         'discharge':Dischargeass,
+#         'resuscitation':Resus 
+#     }, 
+#     'ctasDist':{
+#         'ambulance': {
+#              1:0.5, 
+#              2:0.2, 
+#              3:0.3, 
+#              4:0.1, 
+#              5:0
             
-        }, 
-        'walkIn':{
-             1:0.3, 
-             2:0.2, 
-             3:0.1, 
-             4:0.1, 
-             5:0.1
-        }
+#         }, 
+#         'walkIn':{
+#              1:0.3, 
+#              2:0.2, 
+#              3:0.1, 
+#              4:0.1, 
+#              5:0.1
+#         }
 
-    }, 
-    'iter':simPar_iterations,
-    'warmUp':simPar_warmUp, 
-    'length':simPar_duration
-}
+#     }, 
+#     'iter':simPar_iterations,
+#     'warmUp':simPar_warmUp, 
+#     'length':simPar_duration
+# }
 
 # Having issues with bokeh and GroupBy pandas data frames.
 def plots(df,losRange=(1000,1500)):
