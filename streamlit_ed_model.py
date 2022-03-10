@@ -11,20 +11,28 @@ from st_aggrid import AgGrid
 import EDSIM_BackEnd.ED_Model2 as Model
 import EDSIM_BackEnd.Statistics as s
 
+from multiapp import MultiApp
+from EDSIM_BackEnd import Home, ExtraVariables
+
 #Page configurations
-st.set_page_config(
-     page_title="Emergency Department Simulation",
-     layout="wide",
-     initial_sidebar_state='auto',
-     menu_items={
-         'About': "Ryerson Engineering Capstone Project created by: Gurvir, Mike, Renato, Sarmad"
-     }
- )
+# st.set_page_config(
+#      page_title="Emergency Department Simulation",
+#      layout="wide",
+#      initial_sidebar_state='auto',
+#      menu_items={
+#          'About': "Ryerson Engineering Capstone Project created by: Gurvir, Mike, Renato, Sarmad"
+#      }
+#  )
 #Side Bar Section
-add_selectbox = st.sidebar.selectbox(
-    "App Navigation",
-    ("Home", "Data Input", "Graph Display", "Table Display", "Help!")
-)
+#add_selectbox = st.sidebar.selectbox(
+    #"App Navigation",
+    #("Home", "Data Input", "Graph Display", "Table Display", "Help!")
+#)
+
+app = MultiApp()
+app.add_app("Home",Home.app)
+app.add_app("Extra Inputs",ExtraVariables.app)
+app.run()
 
 #Title at the top of page
 st.title('Emergency Department Simulation')
@@ -39,28 +47,6 @@ if st.button('Process file'):
     process_file(file)
 
 #Inputting Fields/ Sliders for each category 
-st.header('Process Service Times (mins)')
-col01, colnull, col02, colnull, col03, colnull, col04 = st.columns([2,0.5,2,0.5,2,0.5,2])
-with col01:
-    CTASass = st.number_input('CTAS Assessment (STD)', 1, 50, 42)
-    Priorityass = st.number_input('Priority Assessment (STD)', 1, 50, 23)
-    Initialass = st.number_input('Initial Assessment (STD)', 1, 50, 42)
-    Dischargeass = st.number_input('Discharge (STD)', 1, 50, 23)
-with col02:
-    CTASass = st.number_input('CTAS Assessment (Mean)', 1, 50, 42)
-    Priorityass = st.number_input('Priority Assessment (Mean)', 1, 50, 23)
-    Initialass = st.number_input('Initial Assessment (Mean)', 1, 50, 42)
-    Dischargeass = st.number_input('Discharge (Mean)', 1, 50, 23)
-with col03:
-    Treatment = st.number_input('Treatments (STD)', 1, 50, 20)
-    Bedass = st.number_input('Bed Assignment (STD)', 1, 50, 32)
-    Resus = st.number_input('Resuscitations (STD)', 1, 50, 19)
-    Registration = st.number_input('Registrations (STD)', 1, 50, 49)
-with col04:
-    Treatment = st.number_input('Treatments (Mean)', 1, 50, 20)
-    Bedass = st.number_input('Bed Assignment (Mean)', 1, 50, 32)
-    Resus = st.number_input('Resuscitations (Mean)', 1, 50, 19)
-    Registration = st.number_input('Registrations (Mean)', 1, 50, 49)
 
 col2, colnull, col3, colnull, col4 = st.columns([2,1,2.5,1,2])
 col2.subheader('Resource Allocation')
