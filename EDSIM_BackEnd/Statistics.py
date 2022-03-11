@@ -23,8 +23,6 @@ def calculateSummary(dataframe):
     print(groupSizeByRunCTAS) 
 
     bottleneckProcess,bottleneckTime = calcBottleNeck(dataframe)
-    
-    
 
     summary = {'Avg Patients per Run':avgNumPatientsPerRun,
                 'AVG Patients By CTAS':{
@@ -34,14 +32,14 @@ def calculateSummary(dataframe):
                     4:getDataByCTASLevel(groupSizeByRunCTAS,4).mean(),
                     5:getDataByCTASLevel(groupSizeByRunCTAS,5).mean()
                 }, 
-                'Avg Los': meanParAllData(dataframe,'los'), 
+                'Avg LOS': meanParAllData(dataframe,'LOS'), 
                 'Avg Process Queuing Times': { 
                     'Priority Assessment': {
-                    1:meanDataLevel1['Priority Assessment Queue Time '],
-                    2:meanDataLevel2['Priority Assessment Queue Time '],
-                    3:meanDataLevel3['Priority Assessment Queue Time '],
-                    4:meanDataLevel4['Priority Assessment Queue Time '],
-                    5:meanDataLevel5['Priority Assessment Queue Time ']
+                    1:meanDataLevel1['Priority Assessment Queue Time'],
+                    2:meanDataLevel2['Priority Assessment Queue Time'],
+                    3:meanDataLevel3['Priority Assessment Queue Time'],
+                    4:meanDataLevel4['Priority Assessment Queue Time'],
+                    5:meanDataLevel5['Priority Assessment Queue Time']
                 },
                     'CTAS Assessment': {
                     1:meanDataLevel1['CTAS Assessment Queue Time'],
@@ -79,11 +77,11 @@ def calculateSummary(dataframe):
                     5:meanDataLevel5['Treatment Queue Time']
                 },
                     'Discharge Decision':{
-                    1:meanDataLevel1['Discharge Time'],
-                    2:meanDataLevel2['Discharge Time'],
-                    3:meanDataLevel3['Discharge Time'],
-                    4:meanDataLevel4['Discharge Time'],
-                    5:meanDataLevel5['Discharge Time']
+                    1:meanDataLevel1['Discharge Time Stamp'],
+                    2:meanDataLevel2['Discharge Time Stamp'],
+                    3:meanDataLevel3['Discharge Time Stamp'],
+                    4:meanDataLevel4['Discharge Time Stamp'],
+                    5:meanDataLevel5['Discharge Time Stamp']
                 }, 
                     'Resuscitation': {
                     1:meanDataLevel1['Resuscitation Queue Time'],
@@ -141,7 +139,7 @@ def getTimeToTreatment(data):
 
 #Calculate process that takes the longest 
 def calcBottleNeck(Data): 
-    df = meanByGroup(Data, ['Run ID']).drop(columns=['Patient ID', 'Arrival', 'los', 'CTAS'])
+    df = meanByGroup(Data, ['Run ID']).drop(columns=['Patient ID', 'Arrival Time Stamp', 'LOS', 'CTAS'])
     max = df.max().max()
     idx = df.max().idxmax()       
     return (idx,max)     

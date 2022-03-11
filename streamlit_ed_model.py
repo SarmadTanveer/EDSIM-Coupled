@@ -205,32 +205,84 @@ def plotTreatment(df):
     p.legend.location = "top_center" 
 
     return p
-    # fig, axs = plt.subplots(5,figsize=(10,17))
 
-    # Subplot for each CTAS level
-    # axs[0].plot(meanLOSforCTAS1, 'C0')
-    # axs[0].set_xlabel('Run ID')
-    # axs[0].set_ylabel('Mean length of stay (min)')
-    # axs[0].set_title('Mean Patient Length of Stay per Run ID (CTAS 1-5)')
+def writeSummary(summary_dict):
+    colSummary1, colSummary2, colSummary3, colSummary4 = st.columns([1,1,1,1])
+    colSummary1.subheader('General Statistics')
+    colSummary2.subheader('Average Patients By CTAS')
+    colSummary3.subheader('Average Resource Queuing Times')
+    colSummary4.subheader('Bottleneck')
 
-    # axs[1].plot(meanLOSforCTAS2, 'C1')
-    # axs[1].set_xlabel('Run ID')
-    # axs[1].set_ylabel('Mean length of stay (min)')
+    with colSummary1:
+        st.write('Average Patients per Run: ' + str(round(summary_dict['Avg Patients per Run'], 4)))
+        st.write('Average Length of Stay: ' + str(round(summary_dict['Avg LOS'], 4)))
+    with colSummary2:
+        st.write('CTAS 1: ' + str(round(summary_dict['AVG Patients By CTAS'][1], 4)))
+        st.write('CTAS 2: ' + str(round(summary_dict['AVG Patients By CTAS'][2], 4)))
+        st.write('CTAS 3: ' + str(round(summary_dict['AVG Patients By CTAS'][3], 4)))
+        st.write('CTAS 4: ' + str(round(summary_dict['AVG Patients By CTAS'][4], 4)))
+        st.write('CTAS 5: ' + str(round(summary_dict['AVG Patients By CTAS'][5], 4)))
+    with colSummary3:
+        st.write('Nurse: ' + str(round(summary_dict['Avg Resource Queuing Times']['Nurse'], 4)))
+        st.write('Doctor: ' + str(round(summary_dict['Avg Resource Queuing Times']['Doctor'], 4)))
+        st.write('Bed: ' + str(round(summary_dict['Avg Resource Queuing Times']['Bed'], 4)))
+        st.write('Resuscitation Bed: ' + str(round(summary_dict['Avg Resource Queuing Times']['Resuscitation Bed'], 4)))
+    with colSummary4:
+        st.write('Process: ' + str(summary_dict['BottleNeck']['Process']))
+        st.write('Average Time: ' + str(summary_dict['BottleNeck']['Avg Time']))
 
-    # axs[2].plot(meanLOSforCTAS3, 'C2')
-    # axs[2].set_xlabel('Run ID')
-    # axs[2].set_ylabel('Mean length of stay (min)')
+    colSummary5, colSummary6, colSummary7, colSummary8, colSummary9, colSummary10, colSummary11 = st.columns([1,1,1,1,1,1,1])
+    colSummary5.subheader('Priority Assessment Queue Time')
+    colSummary6.subheader('CTAS Assessment Queue Time')
+    colSummary7.subheader('Registration Queue Time')
+    colSummary8.subheader('Bed Assignment Queue Time')
+    colSummary9.subheader('Initial Assessment Queue Time')
+    colSummary10.subheader('Treatment Queue Time')
+    colSummary11.subheader('Discharge Time')
 
-    # axs[3].plot(meanLOSforCTAS4, 'C3')
-    # axs[3].set_xlabel('Run ID')
-    # axs[3].set_ylabel('Mean length of stay (min)')
+    with colSummary5:
+        st.write('CTAS 1: ' + str(round(summary_dict['Avg Process Queuing Times']['Priority Assessment'][1], 4)))
+        st.write('CTAS 2: ' + str(round(summary_dict['Avg Process Queuing Times']['Priority Assessment'][2], 4)))
+        st.write('CTAS 3: ' + str(round(summary_dict['Avg Process Queuing Times']['Priority Assessment'][3], 4)))
+        st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['Priority Assessment'][4], 4)))
+        st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['Priority Assessment'][5], 4)))
+    with colSummary6:
+        st.write('CTAS 1: ' + str(round(summary_dict['Avg Process Queuing Times']['CTAS Assessment'][1], 4)))
+        st.write('CTAS 2: ' + str(round(summary_dict['Avg Process Queuing Times']['CTAS Assessment'][2], 4)))
+        st.write('CTAS 3: ' + str(round(summary_dict['Avg Process Queuing Times']['CTAS Assessment'][3], 4)))
+        st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['CTAS Assessment'][4], 4)))
+        st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['CTAS Assessment'][5], 4)))
+    with colSummary7:
+        st.write('CTAS 1: ' + str(round(summary_dict['Avg Process Queuing Times']['Registration'][1], 4)))
+        st.write('CTAS 2: ' + str(round(summary_dict['Avg Process Queuing Times']['Registration'][2], 4)))
+        st.write('CTAS 3: ' + str(round(summary_dict['Avg Process Queuing Times']['Registration'][3], 4)))
+        st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['Registration'][4], 4)))
+        st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['Registration'][5], 4)))
+    with colSummary8:
+        st.write('CTAS 1: ' + str(round(summary_dict['Avg Process Queuing Times']['Bed Assignment'][1], 4)))
+        st.write('CTAS 2: ' + str(round(summary_dict['Avg Process Queuing Times']['Bed Assignment'][2], 4)))
+        st.write('CTAS 3: ' + str(round(summary_dict['Avg Process Queuing Times']['Bed Assignment'][3], 4)))
+        st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['Bed Assignment'][4], 4)))
+        st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['Bed Assignment'][5], 4)))
+    with colSummary9:
+        st.write('CTAS 1: ' + str(round(summary_dict['Avg Process Queuing Times']['Initial Assessment'][1], 4)))
+        st.write('CTAS 2: ' + str(round(summary_dict['Avg Process Queuing Times']['Initial Assessment'][2], 4)))
+        st.write('CTAS 3: ' + str(round(summary_dict['Avg Process Queuing Times']['Initial Assessment'][3], 4)))
+        st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['Initial Assessment'][4], 4)))
+        st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['Initial Assessment'][5], 4)))
+    with colSummary10:
+        st.write('CTAS 1: ' + str(round(summary_dict['Avg Process Queuing Times']['Treatment'][1], 4)))
+        st.write('CTAS 2: ' + str(round(summary_dict['Avg Process Queuing Times']['Treatment'][2], 4)))
+        st.write('CTAS 3: ' + str(round(summary_dict['Avg Process Queuing Times']['Treatment'][3], 4)))
+        st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['Treatment'][4], 4)))
+        st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['Treatment'][5], 4)))
+    with colSummary11:
+        st.write('CTAS 1: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][1], 4)))
+        st.write('CTAS 2: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][2], 4)))
+        st.write('CTAS 3: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][3], 4)))
+        st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][4], 4)))
+        st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][5], 4)))
 
-    # axs[4].plot(meanLOSforCTAS5, 'C4')
-    # axs[4].set_xlabel('Run ID')
-    # axs[4].set_ylabel('Mean length of stay (min)')
-
-
-# The graphs being displayed/modeled
 
 if st.button('Run the Simulation'):
     # Gets results
@@ -260,14 +312,15 @@ if st.button('Run the Simulation'):
     st.header('Average time from CTAS Assessment to Treatment for each CTAS 2,3,4,5')
     st.bokeh_chart(bedAss, use_container_width=True)
     
-    # Display the results (text)
-    
-    
+    # Display the summary results (text)
     st.title('Summary of Results')
-    #summary = s.calculateSummary(results_df)
-    #summary = pd.DataFrame.from_dict(summary, orient='index', columns=[''])
-    #summary = summary.astype(str)
-    #st.dataframe(summary)
+    st.write('Note: All time values in minutes.')
+    summary = stats.calculateSummary(results_df)
+    writeSummary(summary)
+
+
+
+
     # Raw data frame
     st.title('Raw Simulation Resulting Data')
     AgGrid(results_df)
