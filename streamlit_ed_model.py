@@ -11,23 +11,23 @@ import EDSIM_BackEnd.ED_Model3 as Model
 import EDSIM_BackEnd.Statistics as stats
 
 
-#Page configurations
-st.set_page_config(
-     page_title="Emergency Department Simulation",
-     layout="wide",
-     initial_sidebar_state='auto',
-     menu_items={
-         'About': "Ryerson Engineering Capstone Project created by: Gurvir, Mike, Renato, Sarmad"
-     }
- )
-#Side Bar Section
-add_selectbox = st.sidebar.selectbox(
-    "TEST SIDEBARD",
-    ("Graphs", "Tables", "Help!")
-)
+from multiapp import MultiApp
+from EDSIM_BackEnd import Home, ExtraVariables
 
-#Title at the top of page
-st.title('Emergency Department Simulation')
+#Page configurations
+# st.set_page_config(
+#      page_title="Emergency Department Simulation",
+#      layout="wide",
+#      initial_sidebar_state='auto',
+#      menu_items={
+#          'About': "Ryerson Engineering Capstone Project created by: Gurvir, Mike, Renato, Sarmad"
+#      }
+#  )
+#Side Bar Section
+#add_selectbox = st.sidebar.selectbox(
+    #"App Navigation",
+    #("Home", "Data Input", "Graph Display", "Table Display", "Help!")
+#)
 
 # File Upload/Processing
 file = st.file_uploader('Upload .csv file with data')
@@ -37,108 +37,59 @@ def process_file(file):
     st.write(file)
     df = pd.read_csv(file)
     st.write(df)
+    if st.button('Process file'):
+        process_file(file)
 
+app = MultiApp()
+app.add_app("Home", Home.app)
+app.add_app("Extra Inputs", ExtraVariables.app)
+app.run()
 
-if st.button('Process file'):
-    process_file(file)
+# simParameters = {
+#     'resCapacity': {
+#         'doctor':docs, 
+#         'nurse':nurse,
+#         'beds':beds,
+#         'rBeds':resbeds, 
 
-# Inputting Fields/ Sliders for each category
-st.header('Process Service Times (mins)')
-col01, colnull, col02, colnull, col03, colnull, col04 = st.columns([2,0.5,2,0.5,2,0.5,2])
-with col01:
-    CTASass = st.number_input('CTAS Assessment (STD)', 1, 50, 42)
-    Priorityass = st.number_input('Priority Assessment (STD)', 1, 50, 23)
-    Initialass = st.number_input('Initial Assessment (STD)', 1, 50, 42)
-    Dischargeass = st.number_input('Discharge (STD)', 1, 50, 23)
-with col02:
-    CTASass = st.number_input('CTAS Assessment (Mean)', 1, 50, 42)
-    Priorityass = st.number_input('Priority Assessment (Mean)', 1, 50, 23)
-    Initialass = st.number_input('Initial Assessment (Mean)', 1, 50, 42)
-    Dischargeass = st.number_input('Discharge (Mean)', 1, 50, 23)
-with col03:
-    Treatment = st.number_input('Treatments (STD)', 1, 50, 20)
-    Bedass = st.number_input('Bed Assignment (STD)', 1, 50, 32)
-    Resus = st.number_input('Resuscitations (STD)', 1, 50, 19)
-    Registration = st.number_input('Registrations (STD)', 1, 50, 49)
-with col04:
-    Treatment = st.number_input('Treatments (Mean)', 1, 50, 20)
-    Bedass = st.number_input('Bed Assignment (Mean)', 1, 50, 32)
-    Resus = st.number_input('Resuscitations (Mean)', 1, 50, 19)
-    Registration = st.number_input('Registrations (Mean)', 1, 50, 49)
+#     }, 
+#     'pInterArrival':{
+#         'ambulance':walkInP, 
+#         'walkIn': AmbulanceP
 
-col2, colnull, col3, colnull, col4 = st.columns([2,1,2.5,1,2])
-col2.subheader('Resource Allocation')
-col3.subheader('Inter-Arrival Times (mins)')
-col4.subheader('CTAS Distribution')
+#     }, 
+#     'serTimes':{
+#         'priorAssessment': Priorityass, 
+#         'ctasAssessment':CTASass, 
+#         'registration':Registration, 
+#         'bedAssignment':Bedass,
+#         'initialAssessment':Initialass,
+#         'treatment':Treatment, 
+#         'discharge':Dischargeass,
+#         'resuscitation':Resus 
+#     }, 
+#     'ctasDist':{
+#         'ambulance': {
+#              1:0.5, 
+#              2:0.2, 
+#              3:0.3, 
+#              4:0.1, 
+#              5:0
+            
+#         }, 
+#         'walkIn':{
+#              1:0.3, 
+#              2:0.2, 
+#              3:0.1, 
+#              4:0.1, 
+#              5:0.1
+#         }
 
-with col2:
-    docs = st.number_input('Number of Doctors', 1, 5, 2, help="Min=381, Max=5000")
-    nurse = st.number_input('Number of Nurses', 1, 5, 2, help="Min=381, Max=5000")
-    beds = st.number_input('Number of Beds', 1, 5, 2, help="Min=381, Max=5000")
-    resbeds = st.number_input('Number of Resuscitation Beds', 1, 5, 2, help="Min=381, Max=5000")
-with col3:
-    walkInP = st.number_input('Walk-In Patients', 1, 1000, 478, help="Min=381, Max=5000")
-    AmbulanceP = st.number_input('Ambulance Patients', 1, 50, 9, help="Min=381, Max=5000")
-with col4:
-    CTASwalkInP = st.number_input('CTAS Walk-In Patients', 1, 1000, 478, help="Min=381, Max=5000")
-    CTASAmbulanceP = st.number_input('CTAS Ambulance Patients', 1, 50, 9, help="Min=381, Max=5000")
-
-st.header('Simulation Parameters')
-
-col5, colnull, col6, colnull, col7 = st.columns([2,1,2,1,2])
-with col5: 
-    simPar_duration = st.number_input('Duration (mins)', 1, 30, 10, help="Min=381, Max=5000")
-with col6: 
-    simPar_iterations = st.number_input('Iterations', 5, 40, 18, help="Min=381, Max=5000")
-with col7: 
-    simPar_warmUp = st.number_input('Warm Up Period', 1, 30, 10, help="Min=381, Max=5000")
-
-
-simParameters = {
-    'resCapacity': {
-        'doctor': docs,
-        'nurse': nurse,
-        'beds': beds,
-        'rBeds': resbeds,
-
-    },
-    'pInterArrival': {
-        'ambulance': walkInP,
-        'walkIn': AmbulanceP
-
-    },
-    'serTimes': {
-        'priorAssessment': Priorityass,
-        'ctasAssessment': CTASass,
-        'registration': Registration,
-        'bedAssignment': Bedass,
-        'initialAssessment': Initialass,
-        'treatment': Treatment,
-        'discharge': Dischargeass,
-        'resuscitation': Resus
-    },
-    'ctasDist': {
-        'ambulance': {
-            1: 0.5,
-            2: 0.2,
-            3: 0.3,
-            4: 0.1,
-            5: 0
-
-        },
-        'walkIn': {
-            1: 0.3,
-            2: 0.2,
-            3: 0.1,
-            4: 0.1,
-            5: 0.1
-        }
-
-    },
-    'iter': simPar_iterations,
-    'warmUp': simPar_warmUp,
-    'length': simPar_duration
-}
+#     }, 
+#     'iter':simPar_iterations,
+#     'warmUp':simPar_warmUp, 
+#     'length':simPar_duration
+# }
 
 
 # 
