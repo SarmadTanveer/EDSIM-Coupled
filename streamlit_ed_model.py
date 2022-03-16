@@ -37,8 +37,65 @@ def process_file(file):
     st.write(file)
     df = pd.read_csv(file)
     st.write(df)
-    if st.button('Process file'):
-        process_file(file)
+    
+simParameters = {
+    'resCapacity': {
+        'doctor': docs,
+        'nurse': nurse,
+        'beds': beds,
+        'rBeds': resbeds,
+
+    },
+    'pInterArrival': {
+        'ambulance': walkInP,
+        'walkIn': AmbulanceP
+
+    },
+    'serTimes': {
+        'priorAssessment': Priorityass,
+        'ctasAssessment': CTASass,
+        'registration': Registration,
+        'bedAssignment': Bedass,
+        'initialAssessment': Initialass,
+        'treatment': Treatment,
+        'discharge': Dischargeass,
+        'resuscitation': Resus
+    },
+    'stdDeviations': {
+        'priorAssessment_Deviation': Priorityass_std_dev,
+        'ctasAssessment_Deviation': CTASass_std_dev,
+        'registration_Deviation': Registration_std_dev,
+        'bedAssignment_Deviation': Bedass_std_dev,
+        'initialAssessment_Deviation': Initialass_std_dev,
+        'treatment_Deviation': Treatment_std_dev,
+        'discharge_Deviation': Dischargeass_std_dev,
+        'resuscitation_Deviation': Resus_std_dev
+        },
+    'ctasDist': {
+        'ambulance': {
+            1: 0.5,
+            2: 0.2,
+            3: 0.3,
+            4: 0.1,
+            5: 0
+
+        },
+        'walkIn': {
+            1: 0.3,
+            2: 0.2,
+            3: 0.1,
+            4: 0.1,
+            5: 0.1
+        }
+
+    },
+    'iter': simPar_iterations,
+    'warmUp': simPar_warmUp,
+    'length': simPar_duration
+}
+
+if st.button('Process file'):
+   process_file(file)
 
 app = MultiApp()
 app.add_app("Home", Home.app)
@@ -46,54 +103,6 @@ app.add_app("Extra Inputs", ExtraVariables.app)
 app.add_app("Graph and Table Results", GTResults.app)
 app.add_app("Help Page", HelpPage.app)
 app.run()
-
-# simParameters = {
-#     'resCapacity': {
-#         'doctor':docs, 
-#         'nurse':nurse,
-#         'beds':beds,
-#         'rBeds':resbeds, 
-
-#     }, 
-#     'pInterArrival':{
-#         'ambulance':walkInP, 
-#         'walkIn': AmbulanceP
-
-#     }, 
-#     'serTimes':{
-#         'priorAssessment': Priorityass, 
-#         'ctasAssessment':CTASass, 
-#         'registration':Registration, 
-#         'bedAssignment':Bedass,
-#         'initialAssessment':Initialass,
-#         'treatment':Treatment, 
-#         'discharge':Dischargeass,
-#         'resuscitation':Resus 
-#     }, 
-#     'ctasDist':{
-#         'ambulance': {
-#              1:0.5, 
-#              2:0.2, 
-#              3:0.3, 
-#              4:0.1, 
-#              5:0
-            
-#         }, 
-#         'walkIn':{
-#              1:0.3, 
-#              2:0.2, 
-#              3:0.1, 
-#              4:0.1, 
-#              5:0.1
-#         }
-
-#     }, 
-#     'iter':simPar_iterations,
-#     'warmUp':simPar_warmUp, 
-#     'length':simPar_duration
-# }
-
-
 # 
 def plotLOS(df):
     
