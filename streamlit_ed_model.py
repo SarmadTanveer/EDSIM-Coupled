@@ -43,6 +43,8 @@ def process_file(file):
 app = MultiApp()
 app.add_app("Home", Home.app)
 app.add_app("Extra Inputs", ExtraVariables.app)
+app.add_app("Graph and Table Results", GTResults.app)
+app.add_app("Help Page", HelpPage.app)
 app.run()
 
 # simParameters = {
