@@ -173,6 +173,7 @@ class EDModel:
 
             # nurse takes time to assess
             sampled_service_time = self.trueRandom.gauss(self.parameters.priorAssessment, self.parameters.priorAssessment_std_dev)
+            sampled_service_time = abs(sampled_service_time)
 
             yield self.env.timeout(sampled_service_time)
 
@@ -205,6 +206,7 @@ class EDModel:
             # sampled_xxxx_duration is getting a random value from the mean and then
             # is going to wait that time until it concluded and with that releases the nurse
             sampled_service_time = self.trueRandom.gauss(self.parameters.ctasAssessment, self.parameters.ctasAssessment_std_dev)
+            sampled_service_time = abs(sampled_service_time)
 
             yield self.env.timeout(sampled_service_time)
 
@@ -228,6 +230,7 @@ class EDModel:
             # sampled_xxxx_duration is getting a random value from the mean and then
             # is going to wait that time until it concluded and with that releases the nurse
             sampled_service_time = self.trueRandom.gauss(self.parameters.registration, self.parameters.registration_std_dev)
+            sampled_service_time = abs(sampled_service_time)
 
             yield self.env.timeout(sampled_service_time)
 
@@ -259,6 +262,7 @@ class EDModel:
             # sampled_xxxx_duration is getting a random value from the mean and then
             # is going to wait that time until it concluded and with that releases the nurse but not bed
             sampled_service_time = self.trueRandom.gauss(self.parameters.bedAssignment, self.parameters.bedAssignment_std_dev)
+            sampled_service_time = abs(sampled_service_time)
 
             yield self.env.timeout(sampled_service_time)
 
@@ -288,6 +292,7 @@ class EDModel:
                     # sampled_xxxx_duration is getting a random value from the mean and then
                     # is going to wait that time until it concluded and with that releases the nurse, doctor and bed
                     sampled_service_time = self.trueRandom.gauss(self.parameters.resuscitation, self.parameters.resuscitation_std_dev)
+                    sampled_service_time = abs(sampled_service_time)
 
                     yield self.env.timeout(sampled_service_time)
 
@@ -308,6 +313,7 @@ class EDModel:
             patient.initial_assessment_time = self.env.now
 
             sampled_service_time = self.trueRandom.gauss(self.parameters.initialAssessment, self.parameters.initialAssessment_std_dev)
+            sampled_service_time = abs(sampled_service_time)
 
             yield self.env.timeout(sampled_service_time)
 
@@ -332,6 +338,7 @@ class EDModel:
             # sampled_xxxx_duration is getting a random value from the mean and then
             # is going to wait that time until it concluded and with that releases the nurse and doctor
             sampled_service_time = self.trueRandom.gauss(self.parameters.treatment, self.parameters.treatment_std_dev)
+            sampled_service_time = abs(sampled_service_time)
 
             yield self.env.timeout(sampled_service_time)
 
@@ -344,6 +351,7 @@ class EDModel:
         patient.discharge_decision_time_arrival = self.env.now
 
         sampled_service_time = self.trueRandom.gauss(self.parameters.discharge, self.parameters.discharge_std_dev)
+        sampled_service_time = abs(sampled_service_time)
 
         yield self.env.timeout(sampled_service_time)
 
