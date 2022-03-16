@@ -12,7 +12,7 @@ import EDSIM_BackEnd.Statistics as stats
 
 
 from multiapp import MultiApp
-from EDSIM_BackEnd import Home, ExtraVariables
+from EDSIM_BackEnd import Home, ExtraVariables, GTResults, HelpPage
 
 #Page configurations
 # st.set_page_config(
@@ -43,6 +43,8 @@ def process_file(file):
 app = MultiApp()
 app.add_app("Home", Home.app)
 app.add_app("Extra Inputs", ExtraVariables.app)
+app.add_app("Graph and Table Results", GTResults.app)
+app.add_app("Help Page", HelpPage.app)
 app.run()
 
 # simParameters = {
