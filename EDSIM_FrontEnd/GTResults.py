@@ -1,109 +1,13 @@
 import streamlit as st
-import matplotlib.pyplot as plt
+from st_aggrid import AgGrid
 import pandas as pd
 from bokeh.plotting import figure, show
 from bokeh.models import ColumnDataSource, BoxAnnotation
 from bokeh.palettes import Set1_5, Set1_3, Set1_4
 from bokeh.models import ColumnDataSource
-
-from st_aggrid import AgGrid
-import EDSIM_BackEnd.ED_Model3 as Model
 import EDSIM_BackEnd.Statistics as stats
 
 
-from multiapp import MultiApp
-from EDSIM_BackEnd import Home, ExtraVariables, GTResults, HelpPage
-
-#Page configurations
-# st.set_page_config(
-#      page_title="Emergency Department Simulation",
-#      layout="wide",
-#      initial_sidebar_state='auto',
-#      menu_items={
-#          'About': "Ryerson Engineering Capstone Project created by: Gurvir, Mike, Renato, Sarmad"
-#      }
-#  )
-#Side Bar Section
-#add_selectbox = st.sidebar.selectbox(
-    #"App Navigation",
-    #("Home", "Data Input", "Graph Display", "Table Display", "Help!")
-#)
-
-# File Upload/Processing
-file = st.file_uploader('Upload .csv file with data')
-
-
-def process_file(file):
-    st.write(file)
-    df = pd.read_csv(file)
-    st.write(df)
-    
-simParameters = {
-    'resCapacity': {
-        'doctor': docs,
-        'nurse': nurse,
-        'beds': beds,
-        'rBeds': resbeds,
-
-    },
-    'pInterArrival': {
-        'ambulance': walkInP,
-        'walkIn': AmbulanceP
-
-    },
-    'serTimes': {
-        'priorAssessment': Priorityass,
-        'ctasAssessment': CTASass,
-        'registration': Registration,
-        'bedAssignment': Bedass,
-        'initialAssessment': Initialass,
-        'treatment': Treatment,
-        'discharge': Dischargeass,
-        'resuscitation': Resus
-    },
-    'stdDeviations': {
-        'priorAssessment_Deviation': Priorityass_std_dev,
-        'ctasAssessment_Deviation': CTASass_std_dev,
-        'registration_Deviation': Registration_std_dev,
-        'bedAssignment_Deviation': Bedass_std_dev,
-        'initialAssessment_Deviation': Initialass_std_dev,
-        'treatment_Deviation': Treatment_std_dev,
-        'discharge_Deviation': Dischargeass_std_dev,
-        'resuscitation_Deviation': Resus_std_dev
-        },
-    'ctasDist': {
-        'ambulance': {
-            1: 0.5,
-            2: 0.2,
-            3: 0.3,
-            4: 0.1,
-            5: 0
-
-        },
-        'walkIn': {
-            1: 0.3,
-            2: 0.2,
-            3: 0.1,
-            4: 0.1,
-            5: 0.1
-        }
-
-    },
-    'iter': simPar_iterations,
-    'warmUp': simPar_warmUp,
-    'length': simPar_duration
-}
-
-if st.button('Process file'):
-   process_file(file)
-
-app = MultiApp()
-app.add_app("Home", Home.app)
-app.add_app("Extra Inputs", ExtraVariables.app)
-app.add_app("Graph and Table Results", GTResults.app)
-app.add_app("Help Page", HelpPage.app)
-app.run()
-# 
 def plotLOS(df):
     
     # Get los means by ctas
@@ -175,6 +79,9 @@ def writeSummary(summary_dict):
     colSummary3.subheader('Average Resource Queuing Times')
     colSummary4.subheader('Bottleneck')
 
+def ctas1Rrqueue(df): 
+    return df
+
     with colSummary1:
         st.write('Average Patients per Run: ' + str(round(summary_dict['Avg Patients per Run'], 4)))
         st.write('Average Length of Stay: ' + str(round(summary_dict['Avg LOS'], 4)))
@@ -245,51 +152,60 @@ def writeSummary(summary_dict):
         st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][4], 4)))
         st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][5], 4)))
 
+def process_file(file):
+    df = pd.read_csv(file)
+    return df
 
-if st.button('Run the Simulation'):
-    # Gets results
-    results_df = Model.runSim(simParameters)
-    # Gets plots
+def app():
+    st.title('Results Page')
 
-    # Shows the graphs
-    st.title('Results')
+    patientDataFile = st.file_uploader('Upload <YourScenarioName>_PatientData.csv to view patient level statistics')
+    snapShotDataFile = st.file_uploader('Upload <YourScenarioName>_SnapshotData.csv to view crowding and resource usage statistics')
 
-    #Show LOS graph
-    los = plotLOS(results_df)
-    st.header('Average total Length of Stay in the emergency department  for each CTAS level')
-    st.bokeh_chart(los, use_container_width=True)
-    
-    #Time from Entry to CTASAssessment 
-    ctas = plotCTAS(results_df)
-    st.header('Average time from entry to CTAS Assessment for each CTAS 3,4,5')
-    st.bokeh_chart(ctas, use_container_width=True)
-
-    #Time from triage to Bed Assignemnt 
-    bedAss = plotBedAssignment(results_df)
-    st.header('Average time from CTAS Assessment to Bed Assignment for each CTAS 2,3,4,5')
-    st.bokeh_chart(bedAss, use_container_width=True)
-
-    #Time from triage to Treatment 
-    bedAss = plotTreatment(results_df)
-    st.header('Average time from CTAS Assessment to Treatment for each CTAS 2,3,4,5')
-    st.bokeh_chart(bedAss, use_container_width=True)
-    
-    # Display the summary results (text)
-    st.title('Summary of Results')
-    st.write('Note: All time values in minutes.')
-    summary = stats.calculateSummary(results_df)
-    writeSummary(summary)
+    if patientDataFile is not None: 
+        results_df = process_file(patientDataFile)
 
 
 
+        # Shows the graphs
+        st.header('Results')
 
-    # Raw data frame
-    st.title('Raw Simulation Resulting Data')
-    AgGrid(results_df)
+        #Show LOS graph
+        los = plotLOS(results_df)
+        st.header('Average total Length of Stay in the emergency department  for each CTAS level')
+        st.bokeh_chart(los, use_container_width=True)
+        
+        #Time from Entry to CTASAssessment 
+        ctas = plotCTAS(results_df)
+        st.header('Average time from entry to CTAS Assessment for each CTAS 3,4,5')
+        st.bokeh_chart(ctas, use_container_width=True)
 
-    # Download button for results csv file
-    st.download_button(
-        label="Download the Results as .CSV file",
-        data=results_df.to_csv().encode('utf-8'),
-        file_name='Simulation_Results.csv',
-        mime='text/csv')
+        #Time from triage to Bed Assignemnt 
+        bedAss = plotBedAssignment(results_df)
+        st.header('Average time from CTAS Assessment to Bed Assignment for each CTAS 2,3,4,5')
+        st.bokeh_chart(bedAss, use_container_width=True)
+
+        #Time from triage to Treatment 
+        bedAss = plotTreatment(results_df)
+        st.header('Average time from CTAS Assessment to Treatment for each CTAS 2,3,4,5')
+        st.bokeh_chart(bedAss, use_container_width=True)
+        
+        # Display the summary results (text)
+        # st.title('Summary of Results')
+        # st.write('Note: All time values in minutes.')
+        # summary = stats.calculateSummary(results_df)
+        # writeSummary(summary)
+
+
+
+
+        # Raw data frame
+        st.title('Raw Simulation Resulting Data')
+        AgGrid(results_df)
+
+        # Download button for results csv file
+        st.download_button(
+            label="Download the Results as .CSV file",
+            data=results_df.to_csv().encode('utf-8'),
+            file_name='Simulation_Results.csv',
+            mime='text/csv')

@@ -157,7 +157,7 @@ class EDModel:
 
             # patient is not severe and can proceed normally through the ed 3,4 and 5
             else:
-                yield self.env.process(self.registration(patient))
+                yield self.env.process(self.ctas_assessment(patient))
 
                 # Priority assessment Code red or blue
 
@@ -384,6 +384,7 @@ class EDModel:
 
 def runSim(simParameters):
     print("called runsim")
+    print(simParameters)
     parameters = Data(simParameters)
     runList = []
     timeSeries = []
@@ -407,6 +408,4 @@ def runSim(simParameters):
     df = Writer.ConvertToDataFrame(runList=runList)
     df2 = Writer.ConvertToDataFrame(timeSeries)
     #print(df)
-    Writer.writeToCsv(df, "PatientData.csv")
-    Writer.writeToCsv(df2, "SnapShotData.csv")
-    return df
+    return (df,df2)

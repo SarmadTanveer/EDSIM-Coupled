@@ -27,9 +27,9 @@ class MultiApp:
         app.run()
     """
     def __init__(self):
-        self.apps = []
+        self.pages = []
 
-    def add_app(self, title, func):
+    def add_page(self, title, func):
         """Adds a new application.
         Parameters
         ----------
@@ -38,16 +38,15 @@ class MultiApp:
         title:
             title of the app. Appears in the dropdown in the sidebar.
         """
-        self.apps.append({
+        self.pages.append({
             "title": title,
             "function": func
         })
 
     def run(self):
-        app = st.sidebar.selectbox(
-        #app = st.selectbox(
+        page = st.sidebar.selectbox(
             'Navigation',
-            self.apps,
-            format_func=lambda app: app['title'])
+            self.pages,
+            format_func=lambda page: page['title'])
 
-        app['function']()
+        page['function']()
