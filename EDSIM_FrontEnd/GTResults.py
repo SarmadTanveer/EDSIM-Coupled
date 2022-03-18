@@ -1,109 +1,13 @@
 import streamlit as st
-import matplotlib.pyplot as plt
+from st_aggrid import AgGrid
 import pandas as pd
 from bokeh.plotting import figure, show
 from bokeh.models import ColumnDataSource, BoxAnnotation
 from bokeh.palettes import Set1_5, Set1_3, Set1_4
 from bokeh.models import ColumnDataSource
-
-from st_aggrid import AgGrid
-import EDSIM_BackEnd.ED_Model3 as Model
 import EDSIM_BackEnd.Statistics as stats
 
 
-from multiapp import MultiApp
-from EDSIM_BackEnd import Home, ExtraVariables, GTResults, HelpPage
-
-#Page configurations
-# st.set_page_config(
-#      page_title="Emergency Department Simulation",
-#      layout="wide",
-#      initial_sidebar_state='auto',
-#      menu_items={
-#          'About': "Ryerson Engineering Capstone Project created by: Gurvir, Mike, Renato, Sarmad"
-#      }
-#  )
-#Side Bar Section
-#add_selectbox = st.sidebar.selectbox(
-    #"App Navigation",
-    #("Home", "Data Input", "Graph Display", "Table Display", "Help!")
-#)
-
-# File Upload/Processing
-file = st.file_uploader('Upload .csv file with data')
-
-
-def process_file(file):
-    st.write(file)
-    df = pd.read_csv(file)
-    st.write(df)
-    
-simParameters = {
-    'resCapacity': {
-        'doctor': docs,
-        'nurse': nurse,
-        'beds': beds,
-        'rBeds': resbeds,
-
-    },
-    'pInterArrival': {
-        'ambulance': walkInP,
-        'walkIn': AmbulanceP
-
-    },
-    'serTimes': {
-        'priorAssessment': Priorityass,
-        'ctasAssessment': CTASass,
-        'registration': Registration,
-        'bedAssignment': Bedass,
-        'initialAssessment': Initialass,
-        'treatment': Treatment,
-        'discharge': Dischargeass,
-        'resuscitation': Resus
-    },
-    'stdDeviations': {
-        'priorAssessment_Deviation': Priorityass_std_dev,
-        'ctasAssessment_Deviation': CTASass_std_dev,
-        'registration_Deviation': Registration_std_dev,
-        'bedAssignment_Deviation': Bedass_std_dev,
-        'initialAssessment_Deviation': Initialass_std_dev,
-        'treatment_Deviation': Treatment_std_dev,
-        'discharge_Deviation': Dischargeass_std_dev,
-        'resuscitation_Deviation': Resus_std_dev
-        },
-    'ctasDist': {
-        'ambulance': {
-            1: 0.5,
-            2: 0.2,
-            3: 0.3,
-            4: 0.1,
-            5: 0
-
-        },
-        'walkIn': {
-            1: 0.3,
-            2: 0.2,
-            3: 0.1,
-            4: 0.1,
-            5: 0.1
-        }
-
-    },
-    'iter': simPar_iterations,
-    'warmUp': simPar_warmUp,
-    'length': simPar_duration
-}
-
-if st.button('Process file'):
-   process_file(file)
-
-app = MultiApp()
-app.add_app("Home", Home.app)
-app.add_app("Extra Inputs", ExtraVariables.app)
-app.add_app("Graph and Table Results", GTResults.app)
-app.add_app("Help Page", HelpPage.app)
-app.run()
-# 
 def plotLOS(df):
     
     # Get los means by ctas
@@ -245,11 +149,8 @@ def writeSummary(summary_dict):
         st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][4], 4)))
         st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][5], 4)))
 
-
-if st.button('Run the Simulation'):
-    # Gets results
-    results_df = Model.runSim(simParameters)
-    # Gets plots
+def app():
+    st.header('Results Page')
 
     # Shows the graphs
     st.title('Results')
