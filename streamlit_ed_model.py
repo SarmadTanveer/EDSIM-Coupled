@@ -15,14 +15,7 @@ from multiapp import MultiApp
 from EDSIM_BackEnd import Home, ExtraVariables, GTResults, HelpPage
 
 #Page configurations
-# st.set_page_config(
-#      page_title="Emergency Department Simulation",
-#      layout="wide",
-#      initial_sidebar_state='auto',
-#      menu_items={
-#          'About': "Ryerson Engineering Capstone Project created by: Gurvir, Mike, Renato, Sarmad"
-#      }
-#  )
+st.set_page_config(layout="wide")
 #Side Bar Section
 #add_selectbox = st.sidebar.selectbox(
     #"App Navigation",
@@ -37,7 +30,7 @@ def process_file(file):
     st.write(file)
     df = pd.read_csv(file)
     st.write(df)
-    
+
 simParameters = {
     'resCapacity': {
         'doctor': docs,
@@ -176,22 +169,22 @@ def writeSummary(summary_dict):
     colSummary4.subheader('Bottleneck')
 
     with colSummary1:
-        st.write('Average Patients per Run: ' + str(round(summary_dict['Avg Patients per Run'], 4)))
-        st.write('Average Length of Stay: ' + str(round(summary_dict['Avg LOS'], 4)))
+        st.markdown('**Average Patients per Run**: ' + str(round(summary_dict['Avg Patients per Run'], 4)))
+        st.markdown('**Average Length of Stay**: ' + str(round(summary_dict['Avg LOS'], 4)))
     with colSummary2:
-        st.write('CTAS 1: ' + str(round(summary_dict['AVG Patients By CTAS'][1], 4)))
-        st.write('CTAS 2: ' + str(round(summary_dict['AVG Patients By CTAS'][2], 4)))
-        st.write('CTAS 3: ' + str(round(summary_dict['AVG Patients By CTAS'][3], 4)))
-        st.write('CTAS 4: ' + str(round(summary_dict['AVG Patients By CTAS'][4], 4)))
-        st.write('CTAS 5: ' + str(round(summary_dict['AVG Patients By CTAS'][5], 4)))
+        st.markdown('**CTAS 1**: ' + str(round(summary_dict['AVG Patients By CTAS'][1], 4)))
+        st.markdown('**CTAS 2**: ' + str(round(summary_dict['AVG Patients By CTAS'][2], 4)))
+        st.markdown('**CTAS 3**: ' + str(round(summary_dict['AVG Patients By CTAS'][3], 4)))
+        st.markdown('**CTAS 4**: ' + str(round(summary_dict['AVG Patients By CTAS'][4], 4)))
+        st.markdown('**CTAS 5**: ' + str(round(summary_dict['AVG Patients By CTAS'][5], 4)))
     with colSummary3:
-        st.write('Nurse: ' + str(round(summary_dict['Avg Resource Queuing Times']['Nurse'], 4)))
-        st.write('Doctor: ' + str(round(summary_dict['Avg Resource Queuing Times']['Doctor'], 4)))
-        st.write('Bed: ' + str(round(summary_dict['Avg Resource Queuing Times']['Bed'], 4)))
-        st.write('Resuscitation Bed: ' + str(round(summary_dict['Avg Resource Queuing Times']['Resuscitation Bed'], 4)))
+        st.markdown('**Nurse**: ' + str(round(summary_dict['Avg Resource Queuing Times']['Nurse'], 4)))
+        st.markdown('**Doctor**: ' + str(round(summary_dict['Avg Resource Queuing Times']['Doctor'], 4)))
+        st.markdown('**Bed**: ' + str(round(summary_dict['Avg Resource Queuing Times']['Bed'], 4)))
+        st.markdown('**Resuscitation Bed**: ' + str(round(summary_dict['Avg Resource Queuing Times']['Resuscitation Bed'], 4)))
     with colSummary4:
-        st.write('Process: ' + str(summary_dict['BottleNeck']['Process']))
-        st.write('Average Time: ' + str(summary_dict['BottleNeck']['Avg Time']))
+        st.markdown('**Process**: ' + str(summary_dict['BottleNeck']['Process']))
+        st.markdown('**Average Time**: ' + str(summary_dict['BottleNeck']['Avg Time']))
 
     colSummary5, colSummary6, colSummary7, colSummary8, colSummary9, colSummary10, colSummary11 = st.columns([1,1,1,1,1,1,1])
     colSummary5.subheader('Priority Assessment Queue Time')
@@ -203,47 +196,47 @@ def writeSummary(summary_dict):
     colSummary11.subheader('Discharge Time')
 
     with colSummary5:
-        st.write('CTAS 1: ' + str(round(summary_dict['Avg Process Queuing Times']['Priority Assessment'][1], 4)))
-        st.write('CTAS 2: ' + str(round(summary_dict['Avg Process Queuing Times']['Priority Assessment'][2], 4)))
-        st.write('CTAS 3: ' + str(round(summary_dict['Avg Process Queuing Times']['Priority Assessment'][3], 4)))
-        st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['Priority Assessment'][4], 4)))
-        st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['Priority Assessment'][5], 4)))
+        st.markdown('**CTAS 1**: ' + str(round(summary_dict['Avg Process Queuing Times']['Priority Assessment'][1], 4)))
+        st.markdown('**CTAS 2**: ' + str(round(summary_dict['Avg Process Queuing Times']['Priority Assessment'][2], 4)))
+        st.markdown('**CTAS 3**: ' + str(round(summary_dict['Avg Process Queuing Times']['Priority Assessment'][3], 4)))
+        st.markdown('**CTAS 4**: ' + str(round(summary_dict['Avg Process Queuing Times']['Priority Assessment'][4], 4)))
+        st.markdown('**CTAS 5**: ' + str(round(summary_dict['Avg Process Queuing Times']['Priority Assessment'][5], 4)))
     with colSummary6:
-        st.write('CTAS 1: ' + str(round(summary_dict['Avg Process Queuing Times']['CTAS Assessment'][1], 4)))
-        st.write('CTAS 2: ' + str(round(summary_dict['Avg Process Queuing Times']['CTAS Assessment'][2], 4)))
-        st.write('CTAS 3: ' + str(round(summary_dict['Avg Process Queuing Times']['CTAS Assessment'][3], 4)))
-        st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['CTAS Assessment'][4], 4)))
-        st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['CTAS Assessment'][5], 4)))
+        st.markdown('**CTAS 1**: ' + str(round(summary_dict['Avg Process Queuing Times']['CTAS Assessment'][1], 4)))
+        st.markdown('**CTAS 2**: ' + str(round(summary_dict['Avg Process Queuing Times']['CTAS Assessment'][2], 4)))
+        st.markdown('**CTAS 3**: ' + str(round(summary_dict['Avg Process Queuing Times']['CTAS Assessment'][3], 4)))
+        st.markdown('**CTAS 4**: ' + str(round(summary_dict['Avg Process Queuing Times']['CTAS Assessment'][4], 4)))
+        st.markdown('**CTAS 5**: ' + str(round(summary_dict['Avg Process Queuing Times']['CTAS Assessment'][5], 4)))
     with colSummary7:
-        st.write('CTAS 1: ' + str(round(summary_dict['Avg Process Queuing Times']['Registration'][1], 4)))
-        st.write('CTAS 2: ' + str(round(summary_dict['Avg Process Queuing Times']['Registration'][2], 4)))
-        st.write('CTAS 3: ' + str(round(summary_dict['Avg Process Queuing Times']['Registration'][3], 4)))
-        st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['Registration'][4], 4)))
-        st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['Registration'][5], 4)))
+        st.markdown('**CTAS 1**: ' + str(round(summary_dict['Avg Process Queuing Times']['Registration'][1], 4)))
+        st.markdown('**CTAS 2**: ' + str(round(summary_dict['Avg Process Queuing Times']['Registration'][2], 4)))
+        st.markdown('**CTAS 3**: ' + str(round(summary_dict['Avg Process Queuing Times']['Registration'][3], 4)))
+        st.markdown('**CTAS 4**: ' + str(round(summary_dict['Avg Process Queuing Times']['Registration'][4], 4)))
+        st.markdown('**CTAS 5**: ' + str(round(summary_dict['Avg Process Queuing Times']['Registration'][5], 4)))
     with colSummary8:
-        st.write('CTAS 1: ' + str(round(summary_dict['Avg Process Queuing Times']['Bed Assignment'][1], 4)))
-        st.write('CTAS 2: ' + str(round(summary_dict['Avg Process Queuing Times']['Bed Assignment'][2], 4)))
-        st.write('CTAS 3: ' + str(round(summary_dict['Avg Process Queuing Times']['Bed Assignment'][3], 4)))
-        st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['Bed Assignment'][4], 4)))
-        st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['Bed Assignment'][5], 4)))
+        st.markdown('**CTAS 1**: ' + str(round(summary_dict['Avg Process Queuing Times']['Bed Assignment'][1], 4)))
+        st.markdown('**CTAS 2**: ' + str(round(summary_dict['Avg Process Queuing Times']['Bed Assignment'][2], 4)))
+        st.markdown('**CTAS 3**: ' + str(round(summary_dict['Avg Process Queuing Times']['Bed Assignment'][3], 4)))
+        st.markdown('**CTAS 4**: ' + str(round(summary_dict['Avg Process Queuing Times']['Bed Assignment'][4], 4)))
+        st.markdown('**CTAS 5**: ' + str(round(summary_dict['Avg Process Queuing Times']['Bed Assignment'][5], 4)))
     with colSummary9:
-        st.write('CTAS 1: ' + str(round(summary_dict['Avg Process Queuing Times']['Initial Assessment'][1], 4)))
-        st.write('CTAS 2: ' + str(round(summary_dict['Avg Process Queuing Times']['Initial Assessment'][2], 4)))
-        st.write('CTAS 3: ' + str(round(summary_dict['Avg Process Queuing Times']['Initial Assessment'][3], 4)))
-        st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['Initial Assessment'][4], 4)))
-        st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['Initial Assessment'][5], 4)))
+        st.markdown('**CTAS 1**: ' + str(round(summary_dict['Avg Process Queuing Times']['Initial Assessment'][1], 4)))
+        st.markdown('**CTAS 2**: ' + str(round(summary_dict['Avg Process Queuing Times']['Initial Assessment'][2], 4)))
+        st.markdown('**CTAS 3**: ' + str(round(summary_dict['Avg Process Queuing Times']['Initial Assessment'][3], 4)))
+        st.markdown('**CTAS 4**: ' + str(round(summary_dict['Avg Process Queuing Times']['Initial Assessment'][4], 4)))
+        st.markdown('**CTAS 5**: ' + str(round(summary_dict['Avg Process Queuing Times']['Initial Assessment'][5], 4)))
     with colSummary10:
-        st.write('CTAS 1: ' + str(round(summary_dict['Avg Process Queuing Times']['Treatment'][1], 4)))
-        st.write('CTAS 2: ' + str(round(summary_dict['Avg Process Queuing Times']['Treatment'][2], 4)))
-        st.write('CTAS 3: ' + str(round(summary_dict['Avg Process Queuing Times']['Treatment'][3], 4)))
-        st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['Treatment'][4], 4)))
-        st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['Treatment'][5], 4)))
+        st.markdown('**CTAS 1**: ' + str(round(summary_dict['Avg Process Queuing Times']['Treatment'][1], 4)))
+        st.markdown('**CTAS 2**: ' + str(round(summary_dict['Avg Process Queuing Times']['Treatment'][2], 4)))
+        st.markdown('**CTAS 3**: ' + str(round(summary_dict['Avg Process Queuing Times']['Treatment'][3], 4)))
+        st.markdown('**CTAS 4**: ' + str(round(summary_dict['Avg Process Queuing Times']['Treatment'][4], 4)))
+        st.markdown('**CTAS 5**: ' + str(round(summary_dict['Avg Process Queuing Times']['Treatment'][5], 4)))
     with colSummary11:
-        st.write('CTAS 1: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][1], 4)))
-        st.write('CTAS 2: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][2], 4)))
-        st.write('CTAS 3: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][3], 4)))
-        st.write('CTAS 4: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][4], 4)))
-        st.write('CTAS 5: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][5], 4)))
+        st.markdown('**CTAS 1**: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][1], 4)))
+        st.markdown('**CTAS 2**: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][2], 4)))
+        st.markdown('**CTAS 3**: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][3], 4)))
+        st.markdown('**CTAS 4**: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][4], 4)))
+        st.markdown('**CTAS 5**: ' + str(round(summary_dict['Avg Process Queuing Times']['Discharge Decision'][5], 4)))
 
 
 if st.button('Run the Simulation'):
