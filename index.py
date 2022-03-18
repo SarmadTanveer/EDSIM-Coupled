@@ -21,13 +21,7 @@ from EDSIM_FrontEnd import CreateScenario, Home, GTResults, HelpPage
 #)
 
 # File Upload/Processing
-file = st.file_uploader('Upload .csv file with data')
 
-
-def process_file(file):
-    st.write(file)
-    df = pd.read_csv(file)
-    st.write(df)
     
 # simParameters = {
 #     'resCapacity': {
@@ -85,14 +79,13 @@ def process_file(file):
 #     'length': simPar_duration
 # }
 
-if st.button('Process file'):
-   process_file(file)
 
 app = MultiApp()
-app.add_page("Home", Home.app)
+app.add_page("Welcome", HelpPage.app)
 app.add_page("Create Scenario", CreateScenario.app)
+app.add_page("Home", Home.app)
 app.add_page("Graph and Table Results", GTResults.app)
-app.add_page("Help Page", HelpPage.app)
+
 app.run()
 # 
 
