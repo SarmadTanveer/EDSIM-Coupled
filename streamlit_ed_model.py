@@ -245,6 +245,7 @@ if st.button('Run the Simulation'):
     # Shows the graphs
     st.title('Results')
 
+<<<<<<< Updated upstream:streamlit_ed_model.py
     #Show LOS graph
     los = plotLOS(results_df)
     st.header('Average total Length of Stay in the emergency department  for each CTAS level')
@@ -270,13 +271,49 @@ if st.button('Run the Simulation'):
     st.write('Note: All time values in minutes.')
     summary = stats.calculateSummary(results_df)
     writeSummary(summary)
+=======
+        # Shows the graphs
+        st.header('Results:')
+
+        #Show LOS graph
+        los = plotLOS(results_df)
+        st.header('Average Total Length Of Stay In The Emergency Department For Each CTAS Level')
+        st.bokeh_chart(los, use_container_width=True)
+        
+        #Time from Entry to CTASAssessment 
+        ctas = plotCTAS(results_df)
+        st.header('Average Time From Entry To CTAS Assessment For Each CTAS 3,4,5')
+        st.bokeh_chart(ctas, use_container_width=True)
+
+        #Time from triage to Bed Assignemnt 
+        bedAss = plotBedAssignment(results_df)
+        st.header('Average Time From CTAS Assessment To Bed Assignment For Each CTAS 2,3,4,5')
+        st.bokeh_chart(bedAss, use_container_width=True)
+
+        #Time from triage to Treatment 
+        bedAss = plotTreatment(results_df)
+        st.header('Average Time From CTAS Assessment To Treatment For Each CTAS 2,3,4,5')
+        st.bokeh_chart(bedAss, use_container_width=True)
+        
+        # Display the summary results (text)
+        # st.title('Summary of Results')
+        # st.write('Note: All time values in minutes.')
+        # summary = stats.calculateSummary(results_df)
+        # writeSummary(summary)
+>>>>>>> Stashed changes:EDSIM_FrontEnd/GTResults.py
 
 
 
 
+<<<<<<< Updated upstream:streamlit_ed_model.py
     # Raw data frame
     st.title('Raw Simulation Resulting Data')
     AgGrid(results_df)
+=======
+        # Raw data frame
+        st.title('Raw Simulation Data:')
+        AgGrid(results_df)
+>>>>>>> Stashed changes:EDSIM_FrontEnd/GTResults.py
 
     # Download button for results csv file
     st.download_button(
