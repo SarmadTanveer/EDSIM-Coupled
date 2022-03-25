@@ -9,11 +9,10 @@ from bokeh.models import ColumnDataSource
 from st_aggrid import AgGrid
 import EDSIM_BackEnd.ED_Model3 as Model
 import EDSIM_BackEnd.Statistics as stats
-from EDSIM_FrontEnd import GTResults, HelpPage
 
 
 from multiapp import MultiApp
-from EDSIM_BackEnd import Home, ExtraVariables
+from EDSIM_BackEnd import Home, ExtraVariables, GTResults, HelpPage
 
 #Page configurations
 # st.set_page_config(
