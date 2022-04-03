@@ -1,0 +1,56 @@
+This is the summary for the SIMULATION NAME simulation 
+
+>*******************************************************************<
+=> AVERAGE WAIT TIME <=
+CTAS 1 = 1 minutes ;
+CTAS 2 = 2 minutes ;
+CTAS 3 = 3 minutes ;
+CTAS 4 = 4 minutes ;
+CTAS 5 = 5 minutes ;
+>*******************************************************************<
+
+>*******************************************************************<
+=> AVERAGE LENGTH OF STAY TIME <=
+CTAS 1 = 11 minutes ;
+CTAS 2 = 22 minutes ;
+CTAS 3 = 33 minutes ;
+CTAS 4 = 44 minutes ;
+CTAS 5 = 55 minutes ;
+>*******************************************************************<
+
+>*******************************************************************<
+=> AVERAGE TIME FROM ENTRY TO CTAS ASSESSMENT <=
+CTAS 3 = 12 minutes ;
+CTAS 4 = 13 minutes ;
+CTAS 5 = 14 minutes ;
+>*******************************************************************<
+
+>*******************************************************************<
+=> AVERAGE TIME FROM TRIAGE TO BED ASSIGNMENT <=
+CTAS 2 = 23 minutes ;
+CTAS 3 = 24 minutes ;
+CTAS 4 = 25 minutes ;
+CTAS 5 = 26 minutes ;
+>*******************************************************************<
+
+>*******************************************************************<
+=> AVERAGE TIME FROM BED ASSIGNMENT TO TREATMENT <=
+CTAS 2 = 34 minutes ;
+CTAS 3 = 35 minutes ;
+CTAS 4 = 36 minutes ;
+CTAS 5 = 37 minutes ;
+>*******************************************************************<
+
+>*******************************************************************<
+=> AVERAGE TIME FROM TREATMENT TO DISCHARGE <=
+CTAS 2 = 45 minutes ;
+CTAS 3 = 46 minutes ;
+CTAS 4 = 47 minutes ;
+CTAS 5 = 48 minutes ;
+>*******************************************************************<
+
+>*******************************************************************<
+=> AVERAGE TIME FROM RESUSCITATION TO DISCHARGE <=
+CTAS 1 = 99.99 minutes ;
+>*******************************************************************<
+
