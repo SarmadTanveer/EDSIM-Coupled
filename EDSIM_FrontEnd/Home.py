@@ -4,7 +4,7 @@ import EDSIM_BackEnd.ED_Model3 as model
 
 def app():
     #Title at the top of page
-    st.title('Emergency Department Simulation')
+    #st.title('Emergency Department Simulation')
 
     #Inputting Fields/ Sliders for each category 
 
@@ -28,13 +28,13 @@ def app():
         st.header('Resource allocation parameters')
         col1, col2, col3,col4 = st.columns(4)
         with col1:
-            docs = st.number_input('Number of Doctors', 1, 20, 2, help="Min=381, Max=5000")
+            docs = st.number_input('# of Doctors', 1, 20, 2, help="Min=381, Max=5000")
         with col2:
-            nurse = st.number_input('Number of Nurses', 1, 20, 5, help="Min=381, Max=5000")
+            nurse = st.number_input('# of Nurses', 1, 20, 5, help="Min=381, Max=5000")
         with col3:
-            beds = st.number_input('Number of Beds', 1, 40, 10, help="Min=381, Max=5000")
+            beds = st.number_input('# of Beds', 1, 40, 10, help="Min=381, Max=5000")
         with col4:     
-            resbeds = st.number_input('Number of Resuscitation Beds', 1, 20, 5, help="Min=381, Max=5000")
+            resbeds = st.number_input('# of Resuscitation Bed', 1, 20, 5, help="Min=381, Max=5000")
     
         st.header('Simulation parameters')
         col5, colnull, col6, colnull, col7 = st.columns([2,1,2,1,2])
