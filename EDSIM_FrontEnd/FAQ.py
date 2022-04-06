@@ -1,6 +1,6 @@
 import streamlit as st
 from PIL import Image
-#image = Image.open('sunrise.jpg')
+image = Image.open('helpmodel.png')
 
 def app():
     st.title('Help Page!')
@@ -19,7 +19,7 @@ def app():
     st.caption('Discharge Decision --> The patient will be discharged from the ED department. The mean is the average time that it takes to discharge a patient. The std is how much it will deviate from the mean.')
     st.caption('CTAS Distribution --> The chance (in percentage) of a patient having a certain CTAS level. The sum of CTAS levels 1 to 5 must be 100.')
     st.header('Explanation of the model:')
-    #st.image(image) 
+    st.image(image) 
     st.caption('Patient flow through the emergency department.')
     st.caption('A patient can arrive at the emergency department by walking or by ambulance.')
     st.caption('If a patient arrives by ambulance it means that the paramedics already performed the Priority Assessment so, an ambulance patient will skip the ER Priority Assessment. Otherwise, all patients will undergo Priority Assessment. The Priority Assessment is carried out by a nurse.')
