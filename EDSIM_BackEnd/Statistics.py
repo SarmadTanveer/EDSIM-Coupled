@@ -1,4 +1,5 @@
 
+from concurrent.futures import process
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -20,10 +21,20 @@ def calculateSummary(dataframe):
     meanDataLevel5 =getDataByCTASLevel(groupedByRunCTAS,5).mean()
 
     groupSizeByRunCTAS = sizeByGroup(dataframe)
-    print(groupSizeByRunCTAS) 
+
+    processHashTable = {
+            'Priority Assessment Queue Time': 'Priority Assessment',
+            'CTAS Assessment Queue Time' : 'CTAS Assessment', 
+            'Registration Queue Time': 'Registration',  
+            'Bed Assignment Queue Time': 'Bed Assignment', 
+            'Resuscitation Queue Time': 'Resuscitation', 
+            'Initial Assessment Queue Time': 'Initial Assessment', 
+            'Treatment Queue Time': 'Treatment'
+    }   
 
     bottleneckProcess,bottleneckTime = calcBottleNeck(dataframe)
 
+    bottleneckProcess = processHashTable[bottleneckProcess]
     summary = {'Avg Patients per Run':avgNumPatientsPerRun,
                 'AVG Patients By CTAS':{
                     1:getDataByCTASLevel(groupSizeByRunCTAS,1).mean(),
@@ -88,10 +99,8 @@ def calculateSummary(dataframe):
                     },
                 },
                 'Avg Resource Queuing Times':{
-                        'Nurse': 1, 
-                        'Doctor': 2, 
-                        'Bed': 3, 
-                        'Resuscitation Bed': 4,  
+                        'Bed': (meanDataLevel1['Bed'] + meanDataLevel2['Bed'] + meanDataLevel3['Bed'] + meanDataLevel4['Bed'] + meanDataLevel5['Bed'])/5, 
+                        'Resuscitation Bed': meanDataLevel1['Resuscitation Bed'],  
 
                 }, 
                 'BottleNeck': {
@@ -139,7 +148,7 @@ def getTimeToTreatment(data):
 
 #Calculate process that takes the longest 
 def calcBottleNeck(Data): 
-    df = meanByGroup(Data, ['Run ID']).drop(columns=['Patient ID', 'Arrival Time Stamp', 'LOS', 'CTAS'])
+    df = meanByGroup(Data, ['Run ID']).drop(columns=['Patient ID', 'Arrival Time Stamp', 'LOS', 'CTAS', 'Discharge Time Stamp', 'Bed','Resuscitation Bed','Time to CTAS Assessment', 'Time to Bed Assignment', 'Time to Initial Assessment', 'Time to Treatment'])
     max = df.max().max()
     idx = df.max().idxmax()       
     return (idx,max)     
