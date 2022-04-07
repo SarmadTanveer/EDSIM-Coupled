@@ -1,6 +1,7 @@
 import streamlit as st
 from PIL import Image
 image = Image.open('helpmodel.png')
+workflow=Image.open('workflow.png')
 
 def app():
     st.title('Help Page!')
@@ -29,3 +30,7 @@ def app():
     st.caption('From CTAS Assessment the patients will go to Registration where a nurse will register them into the ER department. Following the Registration the patients will go to Bed Assignment where a nurse will put the patient in an available bed.')
     st.caption('Then a nurse will perform the Initial Assessment of the patient and after a doctor and a nurse will perform the Treatment of the patient.')
     st.caption('Finally, the patient is sent to discharge where the patient will free the bed and be discharged from the ER department.')
+    st.header('Workflow')
+    st.caption('The figure below outlines the recommended workflow to use this tool')
+    st.image('workflow.png')
+  

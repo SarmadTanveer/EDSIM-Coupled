@@ -4,6 +4,7 @@ import random
 from EDSIM_BackEnd.ED_Patient import Patient, ambulancePatient, walkInPatient
 from functools import partial
 from EDSIM_BackEnd.Reource_monitor import patch_resource, monitor
+from simpy.core import Infinity
 import pandas as pd
 
 
@@ -91,10 +92,16 @@ class EDModel:
         # initial parameters
         self.parameters = parameters
 
+        #Number of patients in the ED
+        self.numEDCrowd = 0
+        #Number of patients in waiting area 1
+        self.WRcrowd = 0
+
         # list of patients during this run
         self.patientList = []
         self.resourceMonitor = []
         self.resuscitationBedWait = []
+
 
         # create a variable that creates true random values
         # use this instead of random.
@@ -115,6 +122,9 @@ class EDModel:
 
             # interarrival time for walk-In patients
             interarrival_for_walkIn = self.trueRandom.expovariate(1.0 / self.parameters.pInterWalkIn)
+
+            #increment ed crowd
+            self.numEDCrowd += 1
             # after the patient is created we wait some time and create another one
             yield self.env.timeout(interarrival_for_walkIn)
 
@@ -131,6 +141,10 @@ class EDModel:
 
             # interarrival time for ambulance patients
             interarrival_for_ambulance = self.trueRandom.expovariate(1.0 / self.parameters.pInterAmbulance)
+
+            #increment ED crowd
+            self.numEDCrowd +=1
+
             # after the patient is created we wait some time and create another one
             yield self.env.timeout(interarrival_for_ambulance)
 
@@ -212,12 +226,17 @@ class EDModel:
 
         patient.ctas_assessment_time_end = self.env.now
 
+        #Increment patients in waiting area 1
+        self.WRcrowd+=1
+
         # add patient to registration queue i.e waiting area 1
         self.env.process(self.registration(patient))
 
     def registration(self, patient):
         # patient enters queue
         patient.registration_time_arrival = self.env.now
+
+       
 
         # request a nurse
         with self.nurse.request(priority=patient.CTAS_Level) as req:
@@ -226,7 +245,8 @@ class EDModel:
 
             # this is how long the patient waited for the nurse
             patient.registration_time = self.env.now
-
+             #decrement patients in waiting area 1
+            self.WRcrowd-=1
             # sampled_xxxx_duration is getting a random value from the mean and then
             # is going to wait that time until it concluded and with that releases the nurse
             sampled_service_time = self.trueRandom.gauss(self.parameters.registration, self.parameters.registration_std_dev)
@@ -361,15 +381,20 @@ class EDModel:
         patient.discharge_decision_time_leaving = self.env.now
         patient.calculate_Times()  # calculcate the patient queue times
 
+        #decrement ed crowd
+        self.numEDCrowd -=1
+
         self.patientList.append(patient.convertToDict())
 
     def snapshot(self):
-        while self.env.peek() < (self.parameters.length + self.parameters.warmUp):
+        while self.env.peek() != Infinity:
             self.resourceMonitor.append({'Time Stamp': self.env.now,
                                          'Nurse Queue Length': len(self.nurse.queue),
                                          'Doctor Queue Length': len(self.doctor.queue),
                                          'Regular Bed Queue Length': len(self.regular_beds.queue),
-                                         'Resuscitation Bed Queue Length': len(self.resuscitation_beds.queue)
+                                         'Resuscitation Bed Queue Length': len(self.resuscitation_beds.queue),
+                                         'Patients in the ED': self.numEDCrowd, 
+                                         'Patients in waiting room': self.WRcrowd
                                          })
             yield self.env.timeout(5)
 
