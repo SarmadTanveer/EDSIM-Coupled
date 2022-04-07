@@ -79,8 +79,45 @@ def writeSummary(summary_dict):
     colSummary3.subheader('Average Resource Queuing Times')
     colSummary4.subheader('Bottleneck')
 
+def getScatterForPeriodicData(df, col): 
+    dfR = df[['Time Stamp', col]].copy()
+    dfR = dfR.groupby('Time Stamp').mean()
+
+    p = figure(x_axis_label = 'Simulation Time in mins', y_axis_label = col)
+    p.line(dfR.index,dfR[col].values, line_width = 2)
+
+    return p
+
+
 def ctas1Rrqueue(df): 
-    return df
+    dfR = df[['Run ID','Patient ID','CTAS','Arrival Time Stamp','Resuscitation Bed']].copy()
+    dfR = dfR.loc[dfR['CTAS']==1]
+    dfR = dfR.loc[dfR['Resuscitation Bed']>0]
+
+    p = figure(x_axis_label = 'Arrival Time in Mins', y_axis_label = 'Waiting time for resuscitation bed in mins')
+    p.circle(dfR['Arrival Time Stamp'], dfR['Resuscitation Bed'], size=15)
+
+    return p
+
+def ctas1bins(df): 
+    dfR = df[['CTAS','Resuscitation Bed']].copy()
+    dfR = dfR.loc[dfR['CTAS'] ==1]
+    dfR = dfR.loc[dfR['Resuscitation Bed']>0]
+
+    bins = pd.cut(x=dfR['Resuscitation Bed'], bins=4, include_lowest=True, precision=2)
+
+    ser = bins.value_counts()
+
+    binLabels = []
+    for interval in ser.index: 
+        binLabels.append(interval.__str__())
+
+    values = (ser.values / sum(ser.values))*100
+
+    p = figure(x_axis_label = 'Resuscitation Bed Queuing Time Intervals', y_axis_label='Probability', x_range= binLabels)
+    p.vbar(x=binLabels,  top=values, width=0.5)
+
+    return p
 
     with colSummary1:
         st.write('Average Patients per Run: ' + str(round(summary_dict['Avg Patients per Run'], 4)))
@@ -165,10 +202,8 @@ def app():
     if patientDataFile is not None: 
         results_df = process_file(patientDataFile)
 
-
-
         # Shows the graphs
-        st.header('Results')
+        st.header('ED KPI Results')
 
         #Show LOS graph
         los = plotLOS(results_df)
@@ -186,10 +221,20 @@ def app():
         st.bokeh_chart(bedAss, use_container_width=True)
 
         #Time from triage to Treatment 
-        bedAss = plotTreatment(results_df)
+        treatment = plotTreatment(results_df)
         st.header('Average time from CTAS Assessment to Treatment for each CTAS 2,3,4,5')
-        st.bokeh_chart(bedAss, use_container_width=True)
-        
+        st.bokeh_chart(treatment, use_container_width=True)
+
+        #Waiting time for resuscitation bed 
+        rbedWait = ctas1Rrqueue(results_df)
+        st.header('CTAS 1 wait times for resuscitation bed')
+        st.bokeh_chart(rbedWait, use_container_width=True)
+
+        #ctas 1 patients binned according to 4 equal intervals 
+        rbedBins = ctas1bins(results_df)
+        st.header('Probabilty of a CTAS 1 patient waiting a for a resuscitation bed for a specific time interval')
+        st.bokeh_chart(rbedBins,use_container_width=True)
+
         # Display the summary results (text)
         # st.title('Summary of Results')
         # st.write('Note: All time values in minutes.')
@@ -200,12 +245,39 @@ def app():
 
 
         # Raw data frame
-        st.title('Raw Simulation Resulting Data')
+        st.title('Patient Data')
         AgGrid(results_df)
 
-        # Download button for results csv file
-        st.download_button(
-            label="Download the Results as .CSV file",
-            data=results_df.to_csv().encode('utf-8'),
-            file_name='Simulation_Results.csv',
-            mime='text/csv')
+    
+    #display ed state results  
+    if snapShotDataFile is not None: 
+        spdf = process_file(snapShotDataFile)
+
+        st.header("ED State Results")
+
+        nurseQueue = getScatterForPeriodicData(spdf, 'Nurse Queue Length')
+        st.header('Nurse Queue length')
+        st.bokeh_chart(nurseQueue, use_container_width=True)
+
+        doctorQueue= getScatterForPeriodicData(spdf, 'Doctor Queue Length')
+        st.header('Doctor Queue length')
+        st.bokeh_chart(doctorQueue, use_container_width=True)
+
+        bedQueue = getScatterForPeriodicData(spdf, 'Regular Bed Queue Length')
+        st.header('Bed Queue length ')
+        st.bokeh_chart(bedQueue, use_container_width=True)
+
+        rbedQueue= getScatterForPeriodicData(spdf, 'Resuscitation Bed Queue Length')
+        st.header('Resuscitation Bed Queue Length')
+        st.bokeh_chart(rbedQueue, use_container_width=True)
+
+        WRCrowding= getScatterForPeriodicData(spdf, 'Patients in waiting room')
+        st.header('Crowding in the waiting room prior to registration')
+        st.bokeh_chart(WRCrowding, use_container_width=True)
+
+        EDCrowding= getScatterForPeriodicData(spdf, 'Patients in the ED')
+        st.header('Crowding in the emergency department')
+        st.bokeh_chart(EDCrowding, use_container_width=True)
+         
+        st.title('SnapShot Data')
+        AgGrid(spdf)
