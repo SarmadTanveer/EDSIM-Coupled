@@ -88,10 +88,12 @@ def ctas1Rrqueue(df):
     dfR = dfR.loc[dfR['CTAS']==1]
     dfR = dfR.loc[dfR['Resuscitation Bed']>0]
 
-    p = figure(x_axis_label = 'Arrival Time in Mins', y_axis_label = 'Waiting time for resuscitation bed in mins')
-    p.circle(dfR['Arrival Time Stamp'], dfR['Resuscitation Bed'], size=15)
-
-    return p
+    if dfR.empty: 
+        raise Exception("DataFrame Empty")
+    else:
+        p = figure(x_axis_label = 'Arrival Time in Mins', y_axis_label = 'Waiting time for resuscitation bed in mins')
+        p.circle(dfR['Arrival Time Stamp'], dfR['Resuscitation Bed'], size=15)
+        return p
 
 def ctas1bins(df): 
     dfR = df[['CTAS','Resuscitation Bed']].copy()
@@ -128,36 +130,57 @@ def app():
 
         # Shows the graphs
         st.header('ED KPI Results')
-
-        #Show LOS graph
-        los = plotLOS(results_df)
-        st.header('Average total Length of Stay in the emergency department  for each CTAS level')
-        st.bokeh_chart(los, use_container_width=True)
         
-        #Time from Entry to CTASAssessment 
-        ctas = plotCTAS(results_df)
-        st.header('Average time from entry to CTAS Assessment for each CTAS 3,4,5')
-        st.bokeh_chart(ctas, use_container_width=True)
+        st.header('Average total Length of Stay in the emergency department  for each CTAS level')
+        try: 
+            #Show LOS graph
+            los = plotLOS(results_df)
+            st.bokeh_chart(los, use_container_width=True)
+        except:  
+            st.error("Not enough data to generate this graph")      
 
-        #Time from triage to Bed Assignemnt 
-        bedAss = plotBedAssignment(results_df)
+        st.header('Average time from entry to CTAS Assessment for each CTAS 3,4,5')    
+        try: 
+            #Time from Entry to CTASAssessment 
+            ctas = plotCTAS(results_df)
+            st.bokeh_chart(ctas, use_container_width=True)
+        except: 
+            st.error("Not enough data to generate this graph")
+
         st.header('Average time from CTAS Assessment to Bed Assignment for each CTAS 2,3,4,5')
-        st.bokeh_chart(bedAss, use_container_width=True)
+        try:
+            #Time from triage to Bed Assignemnt 
+            bedAss = plotBedAssignment(results_df)
+            
+            st.bokeh_chart(bedAss, use_container_width=True)
+        except: 
+            st.error("Not enough data to generate this graph")
 
-        #Time from triage to Treatment 
-        treatment = plotTreatment(results_df)
         st.header('Average time from CTAS Assessment to Treatment for each CTAS 2,3,4,5')
-        st.bokeh_chart(treatment, use_container_width=True)
+        try: 
+            #Time from triage to Treatment 
+            treatment = plotTreatment(results_df)
+            
+            st.bokeh_chart(treatment, use_container_width=True)
+        except: 
+            st.error("Not enough data to generate this graph")
 
-        #Waiting time for resuscitation bed 
-        rbedWait = ctas1Rrqueue(results_df)
         st.header('CTAS 1 wait times for resuscitation bed')
-        st.bokeh_chart(rbedWait, use_container_width=True)
+        try:     
+            #Waiting time for resuscitation bed 
+            rbedWait = ctas1Rrqueue(results_df)
+            
+            st.bokeh_chart(rbedWait, use_container_width=True)
+        except: 
+            st.error("Not enough data to generate this graph")
 
-        #ctas 1 patients binned according to 4 equal intervals 
-        rbedBins = ctas1bins(results_df)
         st.header('Probabilty of a CTAS 1 patient waiting a for a resuscitation bed for a specific time interval')
-        st.bokeh_chart(rbedBins,use_container_width=True)
+        try: 
+            #ctas 1 patients binned according to 4 equal intervals 
+            rbedBins = ctas1bins(results_df)
+            st.bokeh_chart(rbedBins,use_container_width=True)
+        except: 
+            st.error("Not enough data to generate this graph")
 
         summary = stats.calculateSummary(results_df)
 
@@ -175,30 +198,50 @@ def app():
 
         st.header("ED State Results")
 
-        nurseQueue = getScatterForPeriodicData(spdf, 'Nurse Queue Length')
         st.header('Nurse Queue length')
-        st.bokeh_chart(nurseQueue, use_container_width=True)
-
-        doctorQueue= getScatterForPeriodicData(spdf, 'Doctor Queue Length')
+        try:
+            nurseQueue = getScatterForPeriodicData(spdf, 'Nurse Queue Length')
+            
+            st.bokeh_chart(nurseQueue, use_container_width=True)
+        except:
+            st.error("Not enough data to generate this graph")
+             
         st.header('Doctor Queue length')
-        st.bokeh_chart(doctorQueue, use_container_width=True)
+        try:     
+            doctorQueue= getScatterForPeriodicData(spdf, 'Doctor Queue Length')
+        
+            st.bokeh_chart(doctorQueue, use_container_width=True)
+        except: 
+            st.error("Not enough data to generate this graph")
 
-        bedQueue = getScatterForPeriodicData(spdf, 'Regular Bed Queue Length')
         st.header('Bed Queue length ')
-        st.bokeh_chart(bedQueue, use_container_width=True)
+        try: 
+            bedQueue = getScatterForPeriodicData(spdf, 'Regular Bed Queue Length')
+            st.bokeh_chart(bedQueue, use_container_width=True)
+        except: 
+            st.error("Not enough data to generate this graph")
 
-        rbedQueue= getScatterForPeriodicData(spdf, 'Resuscitation Bed Queue Length')
         st.header('Resuscitation Bed Queue Length')
-        st.bokeh_chart(rbedQueue, use_container_width=True)
+        try: 
+            rbedQueue= getScatterForPeriodicData(spdf, 'Resuscitation Bed Queue Length')
+            st.bokeh_chart(rbedQueue, use_container_width=True)
+        except: 
+            st.error("Not enough data to generate this graph")
 
-        WRCrowding= getScatterForPeriodicData(spdf, 'Patients in waiting room')
         st.header('Crowding in the waiting room prior to registration')
-        st.bokeh_chart(WRCrowding, use_container_width=True)
+        try:     
+            WRCrowding= getScatterForPeriodicData(spdf, 'Patients in waiting room')
+            st.bokeh_chart(WRCrowding, use_container_width=True)
+        except: 
+            st.error("Not enough data to generate this graph")
 
-        EDCrowding= getScatterForPeriodicData(spdf, 'Patients in the ED')
         st.header('Crowding in the emergency department')
-        st.bokeh_chart(EDCrowding, use_container_width=True)
-         
+        try: 
+            EDCrowding= getScatterForPeriodicData(spdf, 'Patients in the ED')
+            st.bokeh_chart(EDCrowding, use_container_width=True)
+        except: 
+            st.error("Not enough data to generate this graph")
+
         st.title('SnapShot Data')
         AgGrid(spdf)
     
