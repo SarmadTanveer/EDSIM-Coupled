@@ -1,0 +1,6 @@
+simpy
+pandas
+matplotlib
+streamlit
+streamlit-aggrid
+bokeh==2.4.1

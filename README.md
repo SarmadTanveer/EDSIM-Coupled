@@ -9,3 +9,9 @@
 
 # On computer command prompt:
 # pip install --force-reinstall --no-deps bokeh==2.4.1
+
+# DOCKER COMMANDS
+
+# 1) docker pull kobty/edsim:edsim
+# 2) docker run -dp 8501:8501 --name edsim kobty/edsim:edsim
+# 3) Use following URL to open application: http://localhost:8501/
