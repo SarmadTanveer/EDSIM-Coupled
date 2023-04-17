@@ -3,3 +3,5 @@
 *.pyc\
 PatientData.csv
 SnapShotData.csv
+.venv
+__pycache__
